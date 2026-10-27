@@ -389,5 +389,5 @@ pnpm db:studio
 ---
 
 <p align="center">
-  <sub>Built with ❤️ by the COE Education Team.</sub>
+  <sub>Built with ❤️ by the COE Education Team</sub>
 </p>
