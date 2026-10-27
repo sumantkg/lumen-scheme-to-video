@@ -1640,7 +1640,7 @@ export default function VideoEditor({
         return;
       }
       stopAudition();
-      const audio = new Audio(`/app/audio/${id}.mp3`);
+      const audio = new Audio(`/audio/${id}.mp3`);
       audio.loop = true;
       audio.volume = clamp(doc.bgmVolume, 0.02, 1);
       audio.play().catch(() => {

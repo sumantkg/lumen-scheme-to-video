@@ -111,9 +111,15 @@ export async function POST(
   let bgmPath: string | null = null;
   const bgmChoice = typeof body.backgroundMusic === "string" ? body.backgroundMusic : "none";
   if (bgmChoice !== "none") {
-    const potentialPath = path.resolve(`./app/audio/${bgmChoice}.mp3`);
-    if (existsSync(potentialPath)) {
-      bgmPath = potentialPath;
+    const candidatePaths = [
+      path.resolve(`./public/audio/${bgmChoice}.mp3`),
+      path.resolve(`./app/audio/${bgmChoice}.mp3`),
+    ];
+    for (const candidate of candidatePaths) {
+      if (existsSync(candidate)) {
+        bgmPath = candidate;
+        break;
+      }
     }
   }
   const bgmVolume = typeof body.bgmVolume === "number" ? Math.max(0, Math.min(1, body.bgmVolume)) : 0.2;
