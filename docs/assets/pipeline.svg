@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 480" width="100%" height="100%" style="background:#090d16; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="pipe-bg1" cx="30%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#182133" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="pipe-bg2" cx="80%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#1f1838" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Card Background -->
+    <linearGradient id="card-surface" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141c2c" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0e1422" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-purple-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arrow-emerald-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-rose-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#fb7185"/>
+    </marker>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow-pipe" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="480" fill="url(#pipe-bg1)"/>
+  <rect width="1100" height="480" fill="url(#pipe-bg2)"/>
+
+  <!-- Top Title -->
+  <g transform="translate(40, 24)">
+    <rect width="250" height="30" rx="15" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+    <circle cx="15" cy="15" r="5" fill="#38bdf8"/>
+    <text x="30" y="20" fill="#f8fafc" font-size="12" font-weight="700" letter-spacing="1">END-TO-END PIPELINE</text>
+    <text x="310" y="21" fill="#94a3b8" font-size="13">Autonomous 5-Stage Policy-to-Broadcast Video Workflow</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 5 PIPELINE STAGE CARDS                     -->
+  <!-- ========================================== -->
+
+  <!-- STAGE 01: INGEST -->
+  <g transform="translate(40, 80)" filter="url(#shadow-pipe)">
+    <rect width="185" height="310" rx="12" fill="url(#card-surface)" stroke="#38bdf8" stroke-width="1.5"/>
+    <!-- Stage Pill -->
+    <rect x="14" y="16" width="90" height="22" rx="11" fill="#0369a1"/>
+    <text x="24" y="31" fill="#ffffff" font-size="10" font-weight="800">STAGE 01</text>
+    
+    <text x="14" y="68" fill="#38bdf8" font-size="16" font-weight="700">📄 INGEST</text>
+    <text x="14" y="86" fill="#94a3b8" font-size="11" font-weight="600">extract_text</text>
+    
+    <line x1="14" y1="98" x2="171" y2="98" stroke="#334155" stroke-width="1"/>
+    
+    <text x="14" y="120" fill="#f8fafc" font-size="11" font-weight="600">• Input Sources:</text>
+    <text x="22" y="138" fill="#94a3b8" font-size="11">PDFs, Word .docx,</text>
+    <text x="22" y="153" fill="#94a3b8" font-size="11">or raw policy text</text>
+
+    <text x="14" y="180" fill="#f8fafc" font-size="11" font-weight="600">• Engine:</text>
+    <text x="22" y="198" fill="#94a3b8" font-size="11">pdf-parse + mammoth</text>
+    <text x="22" y="213" fill="#94a3b8" font-size="11">Sanitizes tables/laws</text>
+
+    <rect x="12" y="245" width="161" height="50" rx="6" fill="#0f2136" stroke="#0284c7" stroke-width="1"/>
+    <text x="20" y="263" fill="#38bdf8" font-size="9" font-weight="700">OUTPUT ARTIFACT:</text>
+    <text x="20" y="280" fill="#f8fafc" font-size="11" font-weight="600">schemeText</text>
+  </g>
+
+  <!-- ARROW 1 -> 2 -->
+  <g>
+    <path d="M 225 210 L 255 210" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow-flow)"/>
+  </g>
+
+  <!-- STAGE 02: PLAN -->
+  <g transform="translate(255, 80)" filter="url(#shadow-pipe)">
+    <rect width="185" height="310" rx="12" fill="url(#card-surface)" stroke="#c084fc" stroke-width="1.5"/>
+    <rect x="14" y="16" width="90" height="22" rx="11" fill="#7e22ce"/>
+    <text x="24" y="31" fill="#ffffff" font-size="10" font-weight="800">STAGE 02</text>
+    
+    <text x="14" y="68" fill="#c084fc" font-size="16" font-weight="700">🧠 PLAN</text>
+    <text x="14" y="86" fill="#94a3b8" font-size="11" font-weight="600">generate_scenes</text>
+    
+    <line x1="14" y1="98" x2="171" y2="98" stroke="#334155" stroke-width="1"/>
+    
+    <text x="14" y="120" fill="#f8fafc" font-size="11" font-weight="600">• LLM Core:</text>
+    <text x="22" y="138" fill="#c084fc" font-size="11" font-weight="600">Gemini 3.8 Flash</text>
+    <text x="22" y="153" fill="#94a3b8" font-size="11">4–8 Narrative scenes</text>
+
+    <text x="14" y="180" fill="#f8fafc" font-size="11" font-weight="600">• Guardrails:</text>
+    <text x="22" y="198" fill="#94a3b8" font-size="11">Narration timing buffer</text>
+    <text x="22" y="213" fill="#94a3b8" font-size="11">≥1s start · ≥1.5s end</text>
+
+    <rect x="12" y="245" width="161" height="50" rx="6" fill="#291238" stroke="#9333ea" stroke-width="1"/>
+    <text x="20" y="263" fill="#c084fc" font-size="9" font-weight="700">OUTPUT ARTIFACT:</text>
+    <text x="20" y="280" fill="#f8fafc" font-size="11" font-weight="600">Scene Plan JSON</text>
+  </g>
+
+  <!-- ARROW 2 -> 3 -->
+  <g>
+    <path d="M 440 210 L 470 210" stroke="#c084fc" stroke-width="3" marker-end="url(#arrow-purple-flow)"/>
+  </g>
+
+  <!-- STAGE 03: AUDIT -->
+  <g transform="translate(470, 80)" filter="url(#shadow-pipe)">
+    <rect width="185" height="310" rx="12" fill="url(#card-surface)" stroke="#34d399" stroke-width="1.5"/>
+    <rect x="14" y="16" width="90" height="22" rx="11" fill="#047857"/>
+    <text x="24" y="31" fill="#ffffff" font-size="10" font-weight="800">STAGE 03</text>
+    
+    <text x="14" y="68" fill="#34d399" font-size="16" font-weight="700">🛡️ AUDIT</text>
+    <text x="14" y="86" fill="#94a3b8" font-size="11" font-weight="600">run_critic</text>
+    
+    <line x1="14" y1="98" x2="171" y2="98" stroke="#334155" stroke-width="1"/>
+    
+    <text x="14" y="120" fill="#f8fafc" font-size="11" font-weight="600">• 5-Point Rubric:</text>
+    <text x="22" y="138" fill="#94a3b8" font-size="11">1. Regional Grounding</text>
+    <text x="22" y="153" fill="#94a3b8" font-size="11">2. No Talking Heads</text>
+    <text x="22" y="168" fill="#94a3b8" font-size="11">3. Pacing &amp; Subsidies</text>
+
+    <text x="14" y="195" fill="#f8fafc" font-size="11" font-weight="600">• QA Scoring:</text>
+    <text x="22" y="213" fill="#34d399" font-size="11" font-weight="600">0–100 Compliance</text>
+
+    <rect x="12" y="245" width="161" height="50" rx="6" fill="#0b2e24" stroke="#059669" stroke-width="1"/>
+    <text x="20" y="263" fill="#34d399" font-size="9" font-weight="700">OUTPUT ARTIFACT:</text>
+    <text x="20" y="280" fill="#f8fafc" font-size="11" font-weight="600">Audited Storyboard</text>
+  </g>
+
+  <!-- ARROW 3 -> 4 -->
+  <g>
+    <path d="M 655 210 L 685 210" stroke="#34d399" stroke-width="3" marker-end="url(#arrow-emerald-flow)"/>
+  </g>
+
+  <!-- STAGE 04: RENDER -->
+  <g transform="translate(685, 80)" filter="url(#shadow-pipe)">
+    <rect width="185" height="310" rx="12" fill="url(#card-surface)" stroke="#fb7185" stroke-width="1.5"/>
+    <rect x="14" y="16" width="90" height="22" rx="11" fill="#be123c"/>
+    <text x="24" y="31" fill="#ffffff" font-size="10" font-weight="800">STAGE 04</text>
+    
+    <text x="14" y="68" fill="#fb7185" font-size="16" font-weight="700">🎥 RENDER</text>
+    <text x="14" y="86" fill="#94a3b8" font-size="11" font-weight="600">generate_clip</text>
+    
+    <line x1="14" y1="98" x2="171" y2="98" stroke="#334155" stroke-width="1"/>
+    
+    <text x="14" y="120" fill="#f8fafc" font-size="11" font-weight="600">• Video Models:</text>
+    <text x="22" y="138" fill="#fb7185" font-size="11">Gemini Omni 1.1</text>
+    <text x="22" y="153" fill="#94a3b8" font-size="11">Replicate / Fal.ai</text>
+    <text x="22" y="168" fill="#94a3b8" font-size="11">Offline FFmpeg Fallback</text>
+
+    <text x="14" y="195" fill="#f8fafc" font-size="11" font-weight="600">• Specs:</text>
+    <text x="22" y="213" fill="#94a3b8" font-size="11">720p HD · 30 FPS</text>
+
+    <rect x="12" y="245" width="161" height="50" rx="6" fill="#361019" stroke="#e11d48" stroke-width="1"/>
+    <text x="20" y="263" fill="#fb7185" font-size="9" font-weight="700">OUTPUT ARTIFACT:</text>
+    <text x="20" y="280" fill="#f8fafc" font-size="11" font-weight="600">scene-*.mp4</text>
+  </g>
+
+  <!-- ARROW 4 -> 5 -->
+  <g>
+    <path d="M 870 210 L 900 210" stroke="#fb7185" stroke-width="3" marker-end="url(#arrow-rose-flow)"/>
+  </g>
+
+  <!-- STAGE 05: ASSEMBLE -->
+  <g transform="translate(900, 80)" filter="url(#shadow-pipe)">
+    <rect width="185" height="310" rx="12" fill="url(#card-surface)" stroke="#fbbf24" stroke-width="1.5"/>
+    <rect x="14" y="16" width="90" height="22" rx="11" fill="#b45309"/>
+    <text x="24" y="31" fill="#ffffff" font-size="10" font-weight="800">STAGE 05</text>
+    
+    <text x="14" y="68" fill="#fbbf24" font-size="16" font-weight="700">🎬 ASSEMBLE</text>
+    <text x="14" y="86" fill="#94a3b8" font-size="11" font-weight="600">merge (NLE)</text>
+    
+    <line x1="14" y1="98" x2="171" y2="98" stroke="#334155" stroke-width="1"/>
+    
+    <text x="14" y="120" fill="#f8fafc" font-size="11" font-weight="600">• In-Browser NLE:</text>
+    <text x="22" y="138" fill="#94a3b8" font-size="11">Multi-track timeline</text>
+    <text x="22" y="153" fill="#94a3b8" font-size="11">20+ transition filters</text>
+
+    <text x="14" y="180" fill="#f8fafc" font-size="11" font-weight="600">• Audio Mix:</text>
+    <text x="22" y="198" fill="#94a3b8" font-size="11">BGM auto-ducking</text>
+    <text x="22" y="213" fill="#fbbf24" font-size="11" font-weight="600">H.264 Faststart MP4</text>
+
+    <rect x="12" y="245" width="161" height="50" rx="6" fill="#362208" stroke="#d97706" stroke-width="1"/>
+    <text x="20" y="263" fill="#fbbf24" font-size="9" font-weight="700">OUTPUT ARTIFACT:</text>
+    <text x="20" y="280" fill="#f8fafc" font-size="11" font-weight="600">final.mp4 (Master)</text>
+  </g>
+
+  <!-- Bottom Badges / Tech Summary Row -->
+  <g transform="translate(40, 415)">
+    <rect width="1045" height="42" rx="8" fill="#131c2c" stroke="#334155" stroke-width="1"/>
+    <circle cx="25" cy="21" r="4" fill="#34d399"/>
+    <text x="40" y="25" fill="#f8fafc" font-size="11" font-weight="600">Non-Blocking Queue Execution:</text>
+    <text x="235" y="25" fill="#94a3b8" font-size="11">All heavy AI synthesis and FFmpeg encoding steps are isolated in dedicated worker threads to guarantee zero web latency.</text>
+  </g>
+</svg>

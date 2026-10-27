@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%" style="background:#090d16; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <radialGradient id="ed-bg" cx="50%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#141f36" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <filter id="ed-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="480" fill="url(#ed-bg)"/>
+
+  <!-- Top Bar -->
+  <g transform="translate(30, 20)">
+    <rect width="900" height="40" rx="8" fill="#131d2e" stroke="#334155" stroke-width="1"/>
+    <circle cx="20" cy="20" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="20" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="20" r="5" fill="#10b981"/>
+    <text x="75" y="25" fill="#f8fafc" font-size="13" font-weight="700">Lumen NLE Multi-Track Timeline Editor</text>
+    <rect x="740" y="8" width="145" height="24" rx="12" fill="#0284c7"/>
+    <text x="755" y="24" fill="#ffffff" font-size="11" font-weight="700">Render Master MP4</text>
+  </g>
+
+  <!-- Left Sidebar: Media Library -->
+  <g transform="translate(30, 70)" filter="url(#ed-shadow)">
+    <rect width="260" height="220" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+    <rect x="0" y="0" width="260" height="32" rx="8" fill="#1e293b"/>
+    <text x="14" y="21" fill="#38bdf8" font-size="12" font-weight="700">📁 Project Media Clips</text>
+
+    <!-- Clip 1 -->
+    <g transform="translate(12, 42)">
+      <rect width="236" height="36" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="6" y="6" width="36" height="24" rx="4" fill="#0284c7"/>
+      <text x="48" y="18" fill="#f8fafc" font-size="11" font-weight="600">Scene 1 • Hook &amp; Goal</text>
+      <text x="48" y="28" fill="#94a3b8" font-size="9">720p • 00:07.00 • 30fps</text>
+    </g>
+
+    <!-- Clip 2 -->
+    <g transform="translate(12, 84)">
+      <rect width="236" height="36" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="6" y="6" width="36" height="24" rx="4" fill="#0284c7"/>
+      <text x="48" y="18" fill="#f8fafc" font-size="11" font-weight="600">Scene 2 • Key Benefits</text>
+      <text x="48" y="28" fill="#94a3b8" font-size="9">720p • 00:06.50 • 30fps</text>
+    </g>
+
+    <!-- Clip 3 -->
+    <g transform="translate(12, 126)">
+      <rect width="236" height="36" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="6" y="6" width="36" height="24" rx="4" fill="#0284c7"/>
+      <text x="48" y="18" fill="#f8fafc" font-size="11" font-weight="600">Scene 3 • Eligibility</text>
+      <text x="48" y="28" fill="#94a3b8" font-size="9">720p • 00:07.20 • 30fps</text>
+    </g>
+
+    <!-- Clip 4 -->
+    <g transform="translate(12, 168)">
+      <rect width="236" height="36" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="0.8"/>
+      <rect x="6" y="6" width="36" height="24" rx="4" fill="#0284c7"/>
+      <text x="48" y="18" fill="#f8fafc" font-size="11" font-weight="600">Scene 4 • Apply Now CTA</text>
+      <text x="48" y="28" fill="#94a3b8" font-size="9">720p • 00:05.80 • 30fps</text>
+    </g>
+  </g>
+
+  <!-- Right Stage: Preview Canvas -->
+  <g transform="translate(305, 70)" filter="url(#ed-shadow)">
+    <rect width="625" height="220" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+    <!-- Stage Area -->
+    <rect x="80" y="16" width="465" height="165" rx="6" fill="#000000" stroke="#38bdf8" stroke-width="1"/>
+    
+    <!-- Video Player Simulation -->
+    <circle cx="312" cy="98" r="24" fill="#38bdf8" opacity="0.8"/>
+    <polygon points="307,88 323,98 307,108" fill="#ffffff"/>
+    
+    <text x="95" y="38" fill="#ffffff" font-size="11" font-weight="700">720p HD Preview Stage</text>
+    <rect x="95" y="145" width="220" height="24" rx="4" fill="#000000" opacity="0.75"/>
+    <text x="105" y="161" fill="#38bdf8" font-size="10" font-weight="600">লুমেন: সরকারী প্রকল্প প্রচার</text>
+
+    <!-- Scrubber -->
+    <rect x="80" y="192" width="465" height="6" rx="3" fill="#1e293b"/>
+    <rect x="80" y="192" width="180" height="6" rx="3" fill="#38bdf8"/>
+    <circle cx="260" cy="195" r="6" fill="#f8fafc"/>
+    <text x="560" y="200" fill="#94a3b8" font-size="11" font-family="monospace">00:07.45 / 00:26.50</text>
+  </g>
+
+  <!-- Bottom: Timeline Tracks -->
+  <g transform="translate(30, 305)" filter="url(#ed-shadow)">
+    <rect width="900" height="155" rx="8" fill="#0d1424" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Track 1: Video -->
+    <g transform="translate(10, 15)">
+      <rect width="70" height="50" rx="4" fill="#1e293b"/>
+      <text x="12" y="28" fill="#38bdf8" font-size="10" font-weight="800">VIDEO</text>
+      <text x="12" y="42" fill="#64748b" font-size="9">Track 1</text>
+
+      <!-- Scene 1 Block -->
+      <g transform="translate(85, 0)">
+        <rect width="180" height="50" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="12" y="24" fill="#f8fafc" font-size="11" font-weight="700">Scene 1 (Hook)</text>
+        <text x="12" y="40" fill="#94a3b8" font-size="9">00:00 - 00:07</text>
+      </g>
+
+      <!-- Transition 1 -->
+      <g transform="translate(268, 12)">
+        <rect width="45" height="26" rx="13" fill="#3b0764" stroke="#c084fc" stroke-width="1"/>
+        <text x="7" y="17" fill="#c084fc" font-size="8" font-weight="700">xfade</text>
+      </g>
+
+      <!-- Scene 2 Block -->
+      <g transform="translate(316, 0)">
+        <rect width="170" height="50" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="12" y="24" fill="#f8fafc" font-size="11" font-weight="700">Scene 2 (Benefits)</text>
+        <text x="12" y="40" fill="#94a3b8" font-size="9">00:07 - 00:13</text>
+      </g>
+
+      <!-- Transition 2 -->
+      <g transform="translate(489, 12)">
+        <rect width="45" height="26" rx="13" fill="#3b0764" stroke="#c084fc" stroke-width="1"/>
+        <text x="8" y="17" fill="#c084fc" font-size="8" font-weight="700">zoom</text>
+      </g>
+
+      <!-- Scene 3 Block -->
+      <g transform="translate(537, 0)">
+        <rect width="180" height="50" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="12" y="24" fill="#f8fafc" font-size="11" font-weight="700">Scene 3 (Eligibility)</text>
+        <text x="12" y="40" fill="#94a3b8" font-size="9">00:13 - 00:20</text>
+      </g>
+
+      <!-- Transition 3 -->
+      <g transform="translate(720, 12)">
+        <rect width="45" height="26" rx="13" fill="#3b0764" stroke="#c084fc" stroke-width="1"/>
+        <text x="7" y="17" fill="#c084fc" font-size="8" font-weight="700">wipe</text>
+      </g>
+
+      <!-- Scene 4 Block -->
+      <g transform="translate(768, 0)">
+        <rect width="115" height="50" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="10" y="24" fill="#f8fafc" font-size="11" font-weight="700">Scene 4 (CTA)</text>
+        <text x="10" y="40" fill="#94a3b8" font-size="9">00:20 - 00:26</text>
+      </g>
+    </g>
+
+    <!-- Track 2: Audio / BGM -->
+    <g transform="translate(10, 75)">
+      <rect width="70" height="42" rx="4" fill="#1e293b"/>
+      <text x="12" y="24" fill="#34d399" font-size="10" font-weight="800">AUDIO</text>
+      <text x="12" y="36" fill="#64748b" font-size="9">BGM Duck</text>
+
+      <!-- Continuous BGM block -->
+      <g transform="translate(85, 0)">
+        <rect width="798" height="42" rx="6" fill="#064e3b" stroke="#34d399" stroke-width="1.2"/>
+        <text x="16" y="22" fill="#34d399" font-size="11" font-weight="700">🎵 Background Music (BGM): Uplifting Orchestral / Acoustic</text>
+        <text x="16" y="34" fill="#a7f3d0" font-size="9">Volume: 20% • Dynamic Audio Ducking under Voiceover</text>
+      </g>
+    </g>
+
+    <!-- Time Ruler -->
+    <g transform="translate(95, 126)">
+      <line x1="0" y1="0" x2="788" y2="0" stroke="#334155" stroke-width="1"/>
+      <text x="0" y="14" fill="#64748b" font-size="9" font-family="monospace">00:00</text>
+      <text x="180" y="14" fill="#64748b" font-size="9" font-family="monospace">00:07</text>
+      <text x="350" y="14" fill="#64748b" font-size="9" font-family="monospace">00:13</text>
+      <text x="530" y="14" fill="#64748b" font-size="9" font-family="monospace">00:20</text>
+      <text x="750" y="14" fill="#64748b" font-size="9" font-family="monospace">00:26.50</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%" style="background:#090d16; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <radialGradient id="db-bg" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#192338" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="db-card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141c2c" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0e1524" stop-opacity="0.95"/>
+    </linearGradient>
+    <marker id="db-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#fbbf24"/>
+    </marker>
+    <marker id="db-arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#38bdf8"/>
+    </marker>
+    <filter id="db-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="480" fill="url(#db-bg)"/>
+
+  <!-- Top Header -->
+  <g transform="translate(40, 20)">
+    <rect width="250" height="28" rx="14" fill="#1e293b" stroke="#fbbf24" stroke-width="1.2"/>
+    <circle cx="14" cy="14" r="5" fill="#fbbf24"/>
+    <text x="28" y="18" fill="#f8fafc" font-size="11" font-weight="700" letter-spacing="1">DATABASE ENTITY MODEL</text>
+    <text x="310" y="19" fill="#94a3b8" font-size="12">Prisma 7 ORM Schema &amp; Relational Topology (better-sqlite3)</text>
+  </g>
+
+  <!-- User Table -->
+  <g transform="translate(40, 65)" filter="url(#db-shadow)">
+    <rect width="210" height="150" rx="8" fill="url(#db-card)" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="0" y="0" width="210" height="28" rx="8" fill="#0284c7"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">👤 User</text>
+    <text x="12" y="48" fill="#38bdf8" font-size="11" font-family="monospace">id (PK, String)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">email (Unique)</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">passwordHash</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">createdAt</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">updatedAt</text>
+  </g>
+
+  <!-- Session Table -->
+  <g transform="translate(320, 65)" filter="url(#db-shadow)">
+    <rect width="210" height="130" rx="8" fill="url(#db-card)" stroke="#818cf8" stroke-width="1.2"/>
+    <rect x="0" y="0" width="210" height="28" rx="8" fill="#4338ca"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🔑 Session</text>
+    <text x="12" y="48" fill="#818cf8" font-size="11" font-family="monospace">id (PK)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">userId (FK ➔ User)</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">tokenHash (SHA-256)</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">expiresAt (30 Days)</text>
+  </g>
+
+  <!-- ApiCredential Table -->
+  <g transform="translate(600, 65)" filter="url(#db-shadow)">
+    <rect width="320" height="150" rx="8" fill="url(#db-card)" stroke="#c084fc" stroke-width="1.2"/>
+    <rect x="0" y="0" width="320" height="28" rx="8" fill="#7e22ce"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🔒 ApiCredential (AES-256-GCM)</text>
+    <text x="12" y="48" fill="#c084fc" font-size="11" font-family="monospace">id (PK) · userId (FK)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">provider (GEMINI, OPENAI, etc)</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">encryptedKey (Base64 Ciphertext)</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">iv (12-byte Nonce) · authTag (16-byte)</text>
+    <text x="12" y="128" fill="#34d399" font-size="11" font-family="monospace">maskedSuffix (e.g. ••••1a2b)</text>
+  </g>
+
+  <!-- VideoProject Table (Center Hub) -->
+  <g transform="translate(40, 270)" filter="url(#db-shadow)">
+    <rect width="260" height="180" rx="8" fill="url(#db-card)" stroke="#fbbf24" stroke-width="1.8"/>
+    <rect x="0" y="0" width="260" height="28" rx="8" fill="#b45309"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🎬 VideoProject (Core Aggregate)</text>
+    <text x="12" y="48" fill="#fbbf24" font-size="11" font-family="monospace">id (PK, CUID) · userId (FK)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">title · targetRegion · language</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">schemeText (Extracted Policy)</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">status (DRAFT, PLANNING, DONE)</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">criticScore (0–100 Int)</text>
+    <text x="12" y="148" fill="#94a3b8" font-size="11" font-family="monospace">finalVideoKey (Local Storage Path)</text>
+    <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">editorDoc (JSON NLE State)</text>
+  </g>
+
+  <!-- Scene Table -->
+  <g transform="translate(370, 270)" filter="url(#db-shadow)">
+    <rect width="250" height="180" rx="8" fill="url(#db-card)" stroke="#38bdf8" stroke-width="1.2"/>
+    <rect x="0" y="0" width="250" height="28" rx="8" fill="#0369a1"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🎞️ Scene</text>
+    <text x="12" y="48" fill="#38bdf8" font-size="11" font-family="monospace">id (PK) · projectId (FK)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">index (Int, 1..N Sequence)</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">title · narration · duration</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">visualPrompt (Editable Text)</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">status (PENDING, RENDERING...)</text>
+    <text x="12" y="148" fill="#34d399" font-size="11" font-family="monospace">clipKey (storage/projects/scene.mp4)</text>
+    <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">thumbKey (thumb.jpg)</text>
+  </g>
+
+  <!-- PipelineTask Table -->
+  <g transform="translate(680, 270)" filter="url(#db-shadow)">
+    <rect width="240" height="180" rx="8" fill="url(#db-card)" stroke="#34d399" stroke-width="1.2"/>
+    <rect x="0" y="0" width="240" height="28" rx="8" fill="#047857"/>
+    <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">⚡ PipelineTask</text>
+    <text x="12" y="48" fill="#34d399" font-size="11" font-family="monospace">id (PK) · projectId (FK)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">type (EXTRACT, SCENES, CLIP)</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">status (PENDING, PROCESSING)</text>
+    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">payload (JSON Job Args)</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">result (JSON Return Artifact)</text>
+    <text x="12" y="148" fill="#94a3b8" font-size="11" font-family="monospace">error · retryCount</text>
+    <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">startedAt · completedAt</text>
+  </g>
+
+  <!-- Connector Lines with Arrows -->
+  <g>
+    <!-- User -> Session -->
+    <path d="M 250 120 L 320 120" stroke="#818cf8" stroke-width="2" marker-end="url(#db-arrow)"/>
+    <text x="265" y="112" fill="#818cf8" font-size="10" font-weight="700">1 : N</text>
+
+    <!-- User -> VideoProject -->
+    <path d="M 145 215 L 145 270" stroke="#fbbf24" stroke-width="2" marker-end="url(#db-arrow)"/>
+    <text x="155" y="245" fill="#fbbf24" font-size="10" font-weight="700">1 : N</text>
+
+    <!-- VideoProject -> Scene -->
+    <path d="M 300 350 L 370 350" stroke="#38bdf8" stroke-width="2" marker-end="url(#db-arrow-cyan)"/>
+    <text x="315" y="342" fill="#38bdf8" font-size="10" font-weight="700">1 : N</text>
+
+    <!-- Scene -> PipelineTask -->
+    <path d="M 620 350 L 680 350" stroke="#34d399" stroke-width="2" marker-end="url(#db-arrow)"/>
+    <text x="635" y="342" fill="#34d399" font-size="10" font-weight="700">1 : N</text>
+  </g>
+</svg>

@@ -1,0 +1,288 @@
+// Lumen — Government Scheme-to-Video Studio
+// Docs: https://pris.ly/d/prisma-schema
+//
+// Dev uses SQLite (no setup required). For production, change `provider`
+// to "postgresql", swap the driver adapter in lib/db.ts, and point
+// DATABASE_URL at your Postgres instance.
+//
+// Note: SQLite has no native enums in Prisma, so status-like columns are
+// plain strings with documented domains.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions    Session[]
+  credentials ApiCredential[]
+  projects    VideoProject[]
+  assets      Asset[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  // SHA-256 of the opaque token stored in the user's cookie.
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// A pasted provider API key, encrypted at rest. One row per (user, provider).
+/// Plaintext is never returned by any route and never logged.
+model ApiCredential {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// gemini | openai
+  provider   String
+  label      String?
+  /// AES-256-GCM ciphertext, base64
+  ciphertext String
+  /// 12-byte nonce, base64
+  iv         String
+  /// 16-byte auth tag, base64
+  authTag    String
+  /// Masked display suffix, e.g. "…ab12"
+  last4      String
+  verifiedAt DateTime?
+  lastError  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, provider])
+}
+
+/// A single scheme-to-video project and its lifecycle.
+/// status: draft | generating_scenes | auditing | scenes_ready |
+///         generating_media | synthesizing_audio | merging | ready | failed
+model VideoProject {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title  String
+  isDemo Boolean @default(false)
+  status String @default("draft")
+  /// Human-readable current step, e.g. "Scene 2 of 6 — generating clip".
+  stage       String?
+  progress    Int      @default(0)
+  error       String?
+  sceneCount  Int      @default(6)
+
+  // Inputs
+  schemeText      String?
+  documentAssetId String?
+  notes           String?
+  /// bn | en | hi | …
+  language String  @default("bn")
+  /// e.g. "West Bengal"
+  region   String?
+  tone     String?
+  /// target duration in seconds (45–55 for the reference format)
+  targetDurationSec Int     @default(50)
+  aspect            String  @default("16:9")
+
+  // Storyboard metadata (written by scene generation / critic)
+  schemeTitle      String?
+  globalGuidelines String?
+  /// JSON array of detected local landmarks/institutions.
+  groundingReferences String?
+
+  // Model config
+  /// gemini | openai
+  llmProvider String  @default("gemini")
+  llmModel    String?
+  /// Optional separate provider & model for the AI Critic agent (gemini | openai)
+  criticProvider String? @default("gemini")
+  criticModel    String?
+  /// gemini | replicate | fal
+  videoProvider String  @default("gemini")
+  videoModel    String?
+  useCritic     Boolean @default(true)
+
+  // Results
+  finalOutputKey   String?
+  finalThumbKey    String?
+  finalDurationSec Float?
+  complianceScore  Int?
+  criticPassed     Boolean?
+  criticSummary    String?
+
+  scenes Scene[]
+  issues CriticIssue[]
+  tasks  PipelineTask[]
+  assets Asset[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+/// One storyboard scene. Prompts/scripts are editable in the UI; the worker
+/// only ever overwrites fields the user hasn't touched.
+/// status: pending | queued | generating | clip_ready | audio_ready | ready | failed
+model Scene {
+  id        String @id @default(cuid())
+  projectId String
+  project   VideoProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  index         Int
+  title         String
+  durationSec   Int     @default(9)
+  /// The long, structured generation prompt.
+  visualPrompt  String
+  cameraAngle   String?
+  /// Narration script (in the project's language).
+  voiceoverText String?
+  narrationStartSec Float @default(1.0)
+  narrationEndSec   Float @default(8.0)
+  /// JSON array of on-screen bullet phrases.
+  onscreenText      String?
+  /// JSON array of grounding elements (WB institutions, uploaded landmarks).
+  groundingElements String?
+  /// No-lip-sync enforcement note from the director prompt.
+  noLipSyncNote String?
+
+  status            String  @default("pending")
+  clipKey           String?
+  audioKey          String?
+  imageKey          String?
+  clipProviderJobId String?
+  error             String?
+
+  /// Imported in the video editor only. Never shown on the storyboard.
+  editorOnly Boolean @default(false)
+  /// Storyboard scenes can be hidden from the editor without being deleted.
+  hiddenInEditor Boolean @default(false)
+
+  references SceneAsset[]
+  tasks      PipelineTask[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([projectId, editorOnly])
+}
+
+/// An uploaded file: scheme document, grounding image, reference image/video
+/// used to condition a scene clip.
+model Asset {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String?
+  project   VideoProject? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  /// document | grounding_image | reference_image | source_video | audio
+  kind       String
+  /// Used by video-editor imports and kept off the storyboard.
+  editorOnly Boolean @default(false)
+  storageKey String
+  filename   String
+  mime       String
+  size       Int
+  width      Int?
+  height     Int?
+  durationSec Float?
+
+  sceneRefs SceneAsset[]
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([projectId])
+}
+
+/// Binds an uploaded image/video to a scene as a generation reference.
+/// role: first_frame | reference | source_video | grounding
+model SceneAsset {
+  id      String @id @default(cuid())
+  sceneId String
+  scene   Scene  @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  assetId String
+  asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  role    String
+
+  @@unique([sceneId, assetId, role])
+}
+
+/// A finding from the AI Critic audit.
+/// category: lip_sync | grounding | timing_margin | language_naturalness |
+///           document_accuracy | onscreen_micro_prompt
+/// severity: info | warning | error
+model CriticIssue {
+  id         String @id @default(cuid())
+  projectId  String
+  project    VideoProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category   String
+  severity   String
+  description String
+  resolution  String
+  sceneIndex  Int?
+  createdAt   DateTime @default(now())
+
+  @@index([projectId])
+}
+
+/// The worker's unit of work. One DB-backed queue drives every pipeline stage.
+/// kind: extract_text | generate_scenes | run_critic | generate_clip |
+///       synthesize_audio | merge
+/// status: queued | running | succeeded | failed
+model PipelineTask {
+  id        String @id @default(cuid())
+  projectId String
+  project   VideoProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sceneId   String?
+  scene     Scene?  @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  kind        String
+  status      String  @default("queued")
+  priority    Int     @default(0)
+  attempts    Int     @default(0)
+  maxAttempts Int     @default(3)
+  progress    Int     @default(0)
+  /// JSON: stage-specific inputs (model id, payload, etc.).
+  payload     String?
+  provider    String?
+  providerJobId String?
+  error       String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, priority, createdAt])
+  @@index([projectId])
+}
+
+/// Visitor contact & enquiry submissions
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

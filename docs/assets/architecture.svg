@@ -1,0 +1,292 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" width="100%" height="100%" style="background:#090d16; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bg-glow1" cx="20%" cy="15%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="bg-glow2" cx="80%" cy="85%" r="50%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Card Backgrounds -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#131c2e" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0e1524" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Border Gradients -->
+    <linearGradient id="border-tier1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="border-tier2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="border-tier3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="border-tier4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="border-tier5" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Arrow Markers -->
+    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-indigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#818cf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#c084fc"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#fbbf24"/>
+    </marker>
+
+    <!-- Glow Filter -->
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#38bdf8" flood-opacity="0.25"/>
+    </filter>
+    <filter id="glow-card" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1100" height="780" fill="url(#bg-glow1)"/>
+  <rect width="1100" height="780" fill="url(#bg-glow2)"/>
+
+  <!-- Subtle Grid lines -->
+  <g stroke="#1e293b" stroke-width="0.5" opacity="0.4">
+    <line x1="50" y1="0" x2="50" y2="780" />
+    <line x1="200" y1="0" x2="200" y2="780" />
+    <line x1="350" y1="0" x2="350" y2="780" />
+    <line x1="550" y1="0" x2="550" y2="780" />
+    <line x1="750" y1="0" x2="750" y2="780" />
+    <line x1="900" y1="0" x2="900" y2="780" />
+    <line x1="1050" y1="0" x2="1050" y2="780" />
+    <line x1="0" y1="80" x2="1100" y2="80" />
+    <line x1="0" y1="240" x2="1100" y2="240" />
+    <line x1="0" y1="410" x2="1100" y2="410" />
+    <line x1="0" y1="580" x2="1100" y2="580" />
+  </g>
+
+  <!-- ========================================== -->
+  <!-- HEADER BADGE                               -->
+  <!-- ========================================== -->
+  <g transform="translate(50, 24)">
+    <rect width="270" height="32" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+    <circle cx="16" cy="16" r="5" fill="#38bdf8"/>
+    <text x="32" y="21" fill="#f8fafc" font-size="13" font-weight="700" letter-spacing="1">LUMEN ARCHITECTURE</text>
+    <text x="340" y="22" fill="#94a3b8" font-size="13">Decoupled 5-Tier High-Availability Video Synthesis Pipeline</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- TIER 1: CLIENT EXPERIENCE LAYER            -->
+  <!-- ========================================== -->
+  <g transform="translate(50, 75)" filter="url(#glow-card)">
+    <rect width="1000" height="110" rx="14" fill="url(#card-grad)" stroke="url(#border-tier1)" stroke-width="2"/>
+    
+    <!-- Tier Label -->
+    <rect x="20" y="-12" width="220" height="24" rx="12" fill="#0284c7"/>
+    <text x="32" y="4" fill="#ffffff" font-size="11" font-weight="800" letter-spacing="0.8">TIER 1 • CLIENT EXPERIENCE</text>
+    <text x="830" y="25" fill="#38bdf8" font-size="12" font-weight="600">Next.js 16 + React 19</text>
+
+    <!-- Sub-cards -->
+    <!-- Card A: Storyboard Studio -->
+    <g transform="translate(25, 26)">
+      <rect width="300" height="68" rx="8" fill="#182338" stroke="#38bdf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#38bdf8" font-size="14" font-weight="700">🎬 Storyboard Studio</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">Visual prompts, live video previews</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Direct prompt editing &amp; scene re-rendering</text>
+    </g>
+
+    <!-- Card B: NLE Video Editor -->
+    <g transform="translate(350, 26)">
+      <rect width="300" height="68" rx="8" fill="#182338" stroke="#38bdf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#38bdf8" font-size="14" font-weight="700">✂️ NLE Multi-Track Editor</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">Sub-second clip trims &amp; multi-track ruler</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">20+ transition filters &amp; BGM audio ducking</text>
+    </g>
+
+    <!-- Card C: Creation Wizard -->
+    <g transform="translate(675, 26)">
+      <rect width="300" height="68" rx="8" fill="#182338" stroke="#38bdf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#38bdf8" font-size="14" font-weight="700">📋 Ingestion Wizard</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">PDF / DOCX document upload (up to 25MB)</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Language &amp; regional grounding targeting</text>
+    </g>
+  </g>
+
+  <!-- CONNECTOR 1 -> 2 (Down Arrow) -->
+  <g>
+    <path d="M 550 185 L 550 220" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="4,4" marker-end="url(#arrow-cyan)"/>
+    <rect x="460" y="193" width="180" height="20" rx="10" fill="#090d16" stroke="#38bdf8" stroke-width="1"/>
+    <text x="475" y="207" fill="#38bdf8" font-size="10" font-weight="700">HTTPS REST &amp; Range 206</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- TIER 2: API GATEWAY & APP SERVER           -->
+  <!-- ========================================== -->
+  <g transform="translate(50, 225)" filter="url(#glow-card)">
+    <rect width="1000" height="110" rx="14" fill="url(#card-grad)" stroke="url(#border-tier2)" stroke-width="2"/>
+    
+    <!-- Tier Label -->
+    <rect x="20" y="-12" width="220" height="24" rx="12" fill="#4f46e5"/>
+    <text x="32" y="4" fill="#ffffff" font-size="11" font-weight="800" letter-spacing="0.8">TIER 2 • API &amp; APP GATEWAY</text>
+    <text x="850" y="25" fill="#818cf8" font-size="12" font-weight="600">Edge &amp; Node.js</text>
+
+    <!-- Sub-card 1 -->
+    <g transform="translate(25, 26)">
+      <rect width="300" height="68" rx="8" fill="#1a1c36" stroke="#818cf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#818cf8" font-size="14" font-weight="700">🔒 Key Vault (AES-256)</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">Authenticated encryption at rest (GCM)</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Zero plaintext storage • Nonce + Tag verify</text>
+    </g>
+
+    <!-- Sub-card 2 -->
+    <g transform="translate(350, 26)">
+      <rect width="300" height="68" rx="8" fill="#1a1c36" stroke="#818cf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#818cf8" font-size="14" font-weight="700">⚡ Next.js Route Handlers</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">Auth sessions (SHA-256 cookie tokens)</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Multipart PDF parsing &amp; Task enqueuing</text>
+    </g>
+
+    <!-- Sub-card 3 -->
+    <g transform="translate(675, 26)">
+      <rect width="300" height="68" rx="8" fill="#1a1c36" stroke="#818cf8" stroke-width="1"/>
+      <text x="16" y="26" fill="#818cf8" font-size="14" font-weight="700">📡 HTTP 206 Media Streamer</text>
+      <text x="16" y="46" fill="#94a3b8" font-size="11">Partial Content byte-range video streaming</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Instant canvas scrubbing &amp; zero buffering</text>
+    </g>
+  </g>
+
+  <!-- CONNECTORS: TIER 2 -> TIER 3 (Left) & TIER 2 -> TIER 5 (Right) -->
+  <g>
+    <!-- Left path down to Tier 3 -->
+    <path d="M 350 335 L 350 380" stroke="#818cf8" stroke-width="2.5" marker-end="url(#arrow-indigo)"/>
+    <rect x="250" y="348" width="160" height="20" rx="10" fill="#090d16" stroke="#818cf8" stroke-width="1"/>
+    <text x="262" y="362" fill="#818cf8" font-size="10" font-weight="700">Enqueue Async Tasks</text>
+
+    <!-- Right path down to Tier 5 -->
+    <path d="M 750 335 L 750 380" stroke="#fbbf24" stroke-width="2.5" marker-end="url(#arrow-amber)"/>
+    <rect x="660" y="348" width="180" height="20" rx="10" fill="#090d16" stroke="#fbbf24" stroke-width="1"/>
+    <text x="674" y="362" fill="#fbbf24" font-size="10" font-weight="700">Prisma Read/Write Metadata</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- MIDDLE ROW: TIER 3 (Left) & TIER 5 (Right) -->
+  <!-- ========================================== -->
+
+  <!-- TIER 3: ASYNC QUEUE & ORCHESTRATION -->
+  <g transform="translate(50, 385)" filter="url(#glow-card)">
+    <rect width="480" height="150" rx="14" fill="url(#card-grad)" stroke="url(#border-tier3)" stroke-width="2"/>
+    
+    <!-- Tier Label -->
+    <rect x="20" y="-12" width="220" height="24" rx="12" fill="#059669"/>
+    <text x="32" y="4" fill="#ffffff" font-size="11" font-weight="800" letter-spacing="0.8">TIER 3 • ASYNC QUEUE</text>
+    <text x="380" y="25" fill="#34d399" font-size="12" font-weight="600">Background Worker</text>
+
+    <g transform="translate(20, 26)">
+      <rect width="440" height="52" rx="8" fill="#132924" stroke="#34d399" stroke-width="1"/>
+      <text x="16" y="22" fill="#34d399" font-size="13" font-weight="700">⚙️ worker.ts Polling Engine</text>
+      <text x="16" y="40" fill="#94a3b8" font-size="11">Independent Node process • Zero blocking on Next.js server</text>
+    </g>
+
+    <g transform="translate(20, 86)">
+      <rect width="440" height="52" rx="8" fill="#132924" stroke="#34d399" stroke-width="1"/>
+      <text x="16" y="22" fill="#34d399" font-size="13" font-weight="700">🔄 Atomic Task Claiming &amp; Auto-Heal</text>
+      <text x="16" y="40" fill="#94a3b8" font-size="11">pending ➔ processing ➔ done • Auto-resets zombie tasks</text>
+    </g>
+  </g>
+
+  <!-- TIER 5: PERSISTENCE & STORAGE -->
+  <g transform="translate(570, 385)" filter="url(#glow-card)">
+    <rect width="480" height="150" rx="14" fill="url(#card-grad)" stroke="url(#border-tier5)" stroke-width="2"/>
+    
+    <!-- Tier Label -->
+    <rect x="20" y="-12" width="220" height="24" rx="12" fill="#d97706"/>
+    <text x="32" y="4" fill="#ffffff" font-size="11" font-weight="800" letter-spacing="0.8">TIER 5 • PERSISTENCE &amp; STORE</text>
+    <text x="380" y="25" fill="#fbbf24" font-size="12" font-weight="600">Prisma 7 + SQLite</text>
+
+    <g transform="translate(20, 26)">
+      <rect width="440" height="52" rx="8" fill="#2d2311" stroke="#fbbf24" stroke-width="1"/>
+      <text x="16" y="22" fill="#fbbf24" font-size="13" font-weight="700">🗄️ Relational Database (better-sqlite3)</text>
+      <text x="16" y="40" fill="#94a3b8" font-size="11">Projects, Scenes, CriticIssues, PipelineTasks &amp; Users</text>
+    </g>
+
+    <g transform="translate(20, 86)">
+      <rect width="440" height="52" rx="8" fill="#2d2311" stroke="#fbbf24" stroke-width="1"/>
+      <text x="16" y="22" fill="#fbbf24" font-size="13" font-weight="700">💾 Structured Disk Vault (storage/)</text>
+      <text x="16" y="40" fill="#94a3b8" font-size="11">projects/[id]/scene-*.mp4 • uploads/ • renders/final.mp4</text>
+    </g>
+  </g>
+
+  <!-- CONNECTOR TIER 3 -> TIER 4 (Down Arrow) -->
+  <g>
+    <path d="M 290 535 L 290 585" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow-emerald)"/>
+    <rect x="200" y="550" width="180" height="20" rx="10" fill="#090d16" stroke="#34d399" stroke-width="1"/>
+    <text x="210" y="564" fill="#34d399" font-size="10" font-weight="700">Dispatches AI &amp; Render Jobs</text>
+  </g>
+
+  <!-- CONNECTOR TIER 4 -> TIER 5 (Up Arrow to Storage) -->
+  <g>
+    <path d="M 810 590 L 810 545" stroke="#c084fc" stroke-width="2.5" marker-end="url(#arrow-purple)"/>
+    <rect x="730" y="555" width="160" height="20" rx="10" fill="#090d16" stroke="#c084fc" stroke-width="1"/>
+    <text x="740" y="569" fill="#c084fc" font-size="10" font-weight="700">Saves Clips &amp; Final MP4</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- TIER 4: AI INFERENCE & MEDIA SYNTHESIS     -->
+  <!-- ========================================== -->
+  <g transform="translate(50, 590)" filter="url(#glow-card)">
+    <rect width="1000" height="150" rx="14" fill="url(#card-grad)" stroke="url(#border-tier4)" stroke-width="2"/>
+    
+    <!-- Tier Label -->
+    <rect x="20" y="-12" width="260" height="24" rx="12" fill="#9333ea"/>
+    <text x="32" y="4" fill="#ffffff" font-size="11" font-weight="800" letter-spacing="0.8">TIER 4 • AI &amp; MEDIA SYNTHESIS</text>
+    <text x="830" y="25" fill="#c084fc" font-size="12" font-weight="600">Multimodal Inference</text>
+
+    <!-- Sub-card A: Gemini LLM -->
+    <g transform="translate(25, 26)">
+      <rect width="300" height="106" rx="8" fill="#281a38" stroke="#c084fc" stroke-width="1"/>
+      <text x="16" y="24" fill="#c084fc" font-size="14" font-weight="700">🧠 Google Gemini API</text>
+      <text x="16" y="46" fill="#f8fafc" font-size="12" font-weight="600">Gemini 3.8 Flash (Default)</text>
+      <text x="16" y="62" fill="#94a3b8" font-size="11">• 4–8 Scene narrative breakdown</text>
+      <text x="16" y="77" fill="#94a3b8" font-size="11">• Bengali / Hindi / Eng scriptwriting</text>
+      <text x="16" y="92" fill="#64748b" font-size="10">• 5-point automated compliance critic</text>
+    </g>
+
+    <!-- Sub-card B: Video Models -->
+    <g transform="translate(350, 26)">
+      <rect width="300" height="106" rx="8" fill="#281a38" stroke="#c084fc" stroke-width="1"/>
+      <text x="16" y="24" fill="#c084fc" font-size="14" font-weight="700">🎥 Video Synthesis</text>
+      <text x="16" y="46" fill="#f8fafc" font-size="12" font-weight="600">Multi-Provider Engine</text>
+      <text x="16" y="62" fill="#94a3b8" font-size="11">• Gemini Omni 1.1 Flash (Cloud)</text>
+      <text x="16" y="77" fill="#94a3b8" font-size="11">• Replicate (Minimax) / Fal.ai</text>
+      <text x="16" y="92" fill="#34d399" font-size="10">✓ Offline procedural fallback generator</text>
+    </g>
+
+    <!-- Sub-card C: FFmpeg Engine -->
+    <g transform="translate(675, 26)">
+      <rect width="300" height="106" rx="8" fill="#281a38" stroke="#c084fc" stroke-width="1"/>
+      <text x="16" y="24" fill="#c084fc" font-size="14" font-weight="700">⚙️ Static FFmpeg Engine</text>
+      <text x="16" y="46" fill="#f8fafc" font-size="12" font-weight="600">Zero-Dependency Binary</text>
+      <text x="16" y="62" fill="#94a3b8" font-size="11">• 20+ cinematic transition filters</text>
+      <text x="16" y="77" fill="#94a3b8" font-size="11">• BGM audio ducking &amp; normalization</text>
+      <text x="16" y="92" fill="#64748b" font-size="10">• Faststart H.264/AAC MP4 muxer</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Prisma generated client
+/app/generated/
+lib/generated/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Database (SQLite)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Media storage & FFmpeg temp files
+storage/
+tmp/
+*.tmp
+*.part
+
+# Build & cache
+.cache/
+.turbo/
+.vercel/
+dist/
+build/
+
+# AI / local tool configs
+.agents/
+.claude/
+.windsurf/
+.kilo/
+.gemini/
+skills-lock.json
+
+# Lock files (pnpm-lock.yaml is kept)
+yarn.lock
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Editors
+.idea/
+.vscode/
+*.sw?
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Misc
+lumen-essential/
