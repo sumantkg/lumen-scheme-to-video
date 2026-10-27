@@ -17,23 +17,25 @@
 
 ## 📑 Table of Contents
 
-1. [Executive Overview](#-executive-overview)
-2. [Key Capabilities](#-key-capabilities)
-3. [System Architecture](#-system-architecture)
-4. [End-to-End Pipeline Workflow](#-end-to-end-pipeline-workflow)
-5. [AI Critic & Quality Assurance](#-ai-critic--quality-assurance)
-6. [Interactive NLE Video Editor](#-interactive-nle-video-editor)
-7. [Database Schema & Entity Model](#-database-schema--entity-model)
-8. [Security & Key Encryption Architecture](#-security--key-encryption-architecture)
-9. [Supported Models & Providers](#-supported-models--providers)
-10. [Repository Structure](#-repository-structure)
-11. [API Specification](#-api-specification)
-12. [Installation & Setup](#-installation--setup)
-13. [Environment Configuration](#-environment-configuration)
-14. [Running the Application](#-running-the-application)
-15. [Troubleshooting & FAQs](#-troubleshooting--faqs)
+1. [Executive Overview](#executive-overview)
+2. [Key Capabilities](#key-capabilities)
+3. [System Architecture](#system-architecture)
+4. [End-to-End Pipeline Workflow](#end-to-end-pipeline-workflow)
+5. [AI Critic & Quality Assurance](#ai-critic-quality-assurance)
+6. [Interactive NLE Video Editor](#interactive-nle-video-editor)
+7. [Database Schema & Entity Model](#database-schema-entity-model)
+8. [Security & Key Encryption Architecture](#security-key-encryption-architecture)
+9. [Supported Models & Providers](#supported-models-providers)
+10. [Repository Structure](#repository-structure)
+11. [API Specification](#api-specification)
+12. [Installation & Setup](#installation-setup)
+13. [Environment Configuration](#environment-configuration)
+14. [Running the Application](#running-the-application)
+15. [Troubleshooting & FAQs](#troubleshooting-faqs)
 
 ---
+
+<a id="executive-overview"></a>
 
 ## 🌟 Executive Overview
 
@@ -42,6 +44,8 @@
 Lumen ingests these policy PDFs, parses the underlying rules, and autonomously plans, audits, renders, and stitches together localized video broadcasts. It couples **Google Gemini 3.8 Flash** for multimodal storyboarding and prompt engineering, an automated **AI Critic** for compliance verification, **Gemini Omni** (or cloud video models) for AI video synthesis, and an **in-browser Non-Linear Video Editor (NLE)** for fine-grained creative control.
 
 ---
+
+<a id="key-capabilities"></a>
 
 ## ⚡ Key Capabilities
 
@@ -57,6 +61,8 @@ Lumen ingests these policy PDFs, parses the underlying rules, and autonomously p
 
 ---
 
+<a id="system-architecture"></a>
+
 ## 🏛 System Architecture
 
 Lumen is built on a decoupled 5-tier architecture designed for high availability, zero server blocking, and secure multi-tenant execution:
@@ -66,6 +72,8 @@ Lumen is built on a decoupled 5-tier architecture designed for high availability
 </p>
 
 ---
+
+<a id="end-to-end-pipeline-workflow"></a>
 
 ## 🔄 End-to-End Pipeline Workflow
 
@@ -138,6 +146,8 @@ Lumen executes an autonomous **5-stage sequential transformation pipeline** that
 
 ---
 
+<a id="ai-critic-quality-assurance"></a>
+
 ## 🛡 AI Critic & Quality Assurance
 
 Public outreach videos require strict governance before publication. The **Lumen Critic** evaluates every generated scene against 5 deterministic rubrics:
@@ -147,6 +157,8 @@ Public outreach videos require strict governance before publication. The **Lumen
 </p>
 
 ---
+
+<a id="interactive-nle-video-editor"></a>
 
 ## ✂️ Interactive NLE Video Editor
 
@@ -165,6 +177,8 @@ Choose from **20+ hardware-accelerated transitions**:
 
 ---
 
+<a id="database-schema-entity-model"></a>
+
 ## 🗄 Database Schema & Entity Model
 
 Lumen utilizes Prisma ORM with SQLite for zero-config local portability:
@@ -174,6 +188,8 @@ Lumen utilizes Prisma ORM with SQLite for zero-config local portability:
 </p>
 
 ---
+
+<a id="security-key-encryption-architecture"></a>
 
 ## 🔒 Security & Key Encryption Architecture
 
@@ -188,6 +204,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 - **Clickjacking & Framing Mitigation**: Full Content-Security-Policy (CSP) with `frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN` allows same-origin preview modals while blocking third-party embed attacks.
 
 ---
+
+<a id="supported-models-providers"></a>
 
 ## 🤖 Supported Models & Providers
 
@@ -212,6 +230,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 | **Fal.ai** | `fal-ai/kling-video/v1` | Cloud Video | Long-horizon temporally consistent video |
 
 ---
+
+<a id="repository-structure"></a>
 
 ## 📁 Repository Structure
 
@@ -256,6 +276,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 
 ---
 
+<a id="api-specification"></a>
+
 ## 🔌 API Specification
 
 | Endpoint | Method | Purpose |
@@ -273,6 +295,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 | `/api/assets/:id` | `GET` | Streams files supporting `Range: bytes` seek headers |
 
 ---
+
+<a id="installation-setup"></a>
 
 ## 🚀 Installation & Setup
 
@@ -306,6 +330,8 @@ pnpm db:push
 
 ---
 
+<a id="environment-configuration"></a>
+
 ## ⚙️ Environment Configuration
 
 | Variable | Required | Default | Description |
@@ -320,6 +346,8 @@ pnpm db:push
 | `OPENAI_API_KEY` | Optional | — | Fallback server-level OpenAI key |
 
 ---
+
+<a id="running-the-application"></a>
 
 ## 🏃 Running the Application
 
@@ -338,6 +366,8 @@ pnpm worker
 > 💡 **Tip**: To run a quick test of the offline editor without setting up any cloud API keys, click **"Editor demo"** in the top navigation bar!
 
 ---
+
+<a id="troubleshooting-faqs"></a>
 
 ## ❓ Troubleshooting & FAQs
 
