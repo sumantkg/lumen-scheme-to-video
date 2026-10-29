@@ -213,8 +213,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 
 | Provider | Model Identifier | Tier | Best Suited For |
 |---|---|---|---|
-| **Google Gemini** | `gemini-3.8-flash` *(Default)* | Multimodal | High-speed, high-context scheme breakdown |
-| **Google Gemini** | `gemini-3.5-flash` | Multimodal | Stable fallback storyboarding |
+| **Google Gemini** | `gemini-3.5-flash` *(Default)* | Multimodal | High-speed, high-stability scheme breakdown |
+| **Google Gemini** | `gemini-3.8-flash` | Multimodal | Experimental high-context storyboarding |
 | **Google Gemini** | `gemini-3.1-flash-lite` | Efficient | Ultra-low latency draft generation |
 | **OpenAI** | `gpt-4o` | Multimodal | Deep semantic policy analysis |
 | **OpenAI** | `gpt-4o-mini` | Fast | Budget-friendly storyboard drafting |

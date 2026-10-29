@@ -47,7 +47,7 @@ export default function ProjectWizard() {
   const [sceneCount, setSceneCount] = useState(6);
   const [aspect, setAspect] = useState<(typeof ASPECTS)[number]>("16:9");
   const [llmProvider, setLlmProvider] = useState<"gemini" | "openai">("gemini");
-  const [llmModel, setLlmModel] = useState("gemini-3.8-flash");
+  const [llmModel, setLlmModel] = useState("gemini-3.5-flash");
   const [separateCriticLlm, setSeparateCriticLlm] = useState(false);
   const [criticProvider, setCriticProvider] = useState<"gemini" | "openai">("gemini");
   const [criticModel, setCriticModel] = useState("gemini-3.5-flash");

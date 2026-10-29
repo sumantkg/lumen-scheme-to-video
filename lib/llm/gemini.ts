@@ -12,8 +12,8 @@ import { LlmAuthError, LlmExecutionError } from "./types";
 export const DEFAULT_GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
 
 export const GEMINI_FALLBACK_MODELS = [
-  "gemini-3.8-flash",
   "gemini-3.5-flash",
+  "gemini-3.8-flash",
   "gemini-3.1-flash-lite",
 ];
 
@@ -30,14 +30,14 @@ function apiBaseFrom(request: LlmRequest): string {
   );
 }
 
-const DEFAULT_TIMEOUT_MS = 60_000;
+const DEFAULT_TIMEOUT_MS = 45_000;
 
 export async function callGemini(
   request: LlmRequest,
   extractJson: (text: string) => Record<string, unknown>
 ): Promise<Record<string, unknown>> {
   const base = apiBaseFrom(request);
-  const rawModel = (request.model ?? process.env.LLM_GEMINI_MODEL ?? "gemini-3.8-flash").trim();
+  const rawModel = (request.model ?? process.env.LLM_GEMINI_MODEL ?? "gemini-3.5-flash").trim();
   const primary = rawModel;
   const candidates = [primary, ...GEMINI_FALLBACK_MODELS.filter((m) => m !== primary)];
 
@@ -69,7 +69,7 @@ export async function callGemini(
             headers: { "x-goog-api-key": request.apiKey },
             body,
             timeoutMs: request.timeoutMs ?? DEFAULT_TIMEOUT_MS,
-            retries: 2,
+            retries: 1,
           }
         );
 
@@ -89,6 +89,15 @@ export async function callGemini(
         if (isCompletionFailure(error)) {
           // A concrete, non-transient failure — not worth trying every model.
           throw error;
+        }
+        // If this model timed out or was aborted, don't waste time trying jsonMode=false on the same unresponsive model
+        const isTimeout =
+          error instanceof Error &&
+          (error.name === "TimeoutError" ||
+            error.name === "AbortError" ||
+            /timeout|aborted/i.test(error.message));
+        if (isTimeout) {
+          break;
         }
       }
     }

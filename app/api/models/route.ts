@@ -16,8 +16,8 @@ import {
  */
 
 export const GEMINI_LLM_MODELS = [
-  "gemini-3.8-flash",
   "gemini-3.5-flash",
+  "gemini-3.8-flash",
   "gemini-3.1-flash-lite",
 ];
 
@@ -70,7 +70,7 @@ export async function GET() {
       gemini: {
         label: "Google Gemini",
         models: GEMINI_LLM_MODELS,
-        default: "gemini-3.8-flash",
+        default: "gemini-3.5-flash",
         verified: geminiKey,
       },
       openai: {
