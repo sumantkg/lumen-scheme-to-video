@@ -25,6 +25,29 @@ export const VIDEO_CATALOG: Record<ProviderName, VideoProviderInfo> = {
     ],
     note: "Video generation with Gemini Omni. Reuses your verified Gemini key.",
   },
+  replicate: {
+    label: "Replicate",
+    billing: "user-key",
+    default: "minimax/hailuo-02",
+    models: [
+      "minimax/hailuo-02",
+      "minimax/video-01",
+      "wan-video/wan-2.5-t2v",
+      "kwaivgi/kling-v2.1",
+    ],
+    note: "Hundreds of community video models, billed to your Replicate account.",
+  },
+  fal: {
+    label: "fal.ai",
+    billing: "user-key",
+    default: "fal-ai/wan/v2.2-5b/text-to-video/fast-wan",
+    models: [
+      "fal-ai/wan/v2.2-5b/text-to-video/fast-wan",
+      "fal-ai/kling-video/v2/master/text-to-video",
+      "fal-ai/minimax/hailuo-02/standard/text-to-video",
+    ],
+    note: "Fast hosted text-to-video, billed to your fal account.",
+  },
 };
 
 /** Default provider when a project has not chosen one (Google Gemini Omni). */
@@ -35,6 +58,8 @@ export const DEFAULT_VIDEO_PROVIDER: ProviderName = "gemini";
  */
 export const VIDEO_CREDENTIAL_PROVIDER: Record<ProviderName, string | null> = {
   gemini: "gemini",
+  replicate: "replicate",
+  fal: "fal",
 };
 
 export function defaultVideoModel(name: ProviderName): string {
