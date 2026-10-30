@@ -39,6 +39,14 @@ export interface SceneView {
   editorOnly: boolean;
   /** Hidden from the editor media panel but still part of the storyboard. */
   hiddenInEditor: boolean;
+  /** Grounding or first_frame image reference attached to this scene. */
+  reference?: {
+    id: string;
+    assetId: string;
+    filename: string;
+    mime: string;
+    url: string;
+  } | null;
 }
 
 export interface AssetView {
@@ -71,6 +79,7 @@ export interface ProjectView {
   error: string | null;
   sceneCount: number;
   language: string;
+  tone: string;
   region: string | null;
   schemeTitle: string | null;
   complianceScore: number | null;
@@ -140,6 +149,7 @@ function toProjectView(project: ProjectRow): ProjectView {
     error: project.error,
     sceneCount: project.sceneCount,
     language: project.language,
+    tone: project.tone ?? "formal_broadcaster",
     region: project.region,
     schemeTitle: project.schemeTitle,
     complianceScore: project.complianceScore,
@@ -212,6 +222,11 @@ export async function getProjectForUser(
   const [scenes, assets, issues] = await Promise.all([
     prisma.scene.findMany({
       where: editorView ? { projectId: id } : { projectId: id, editorOnly: false },
+      include: {
+        references: {
+          include: { asset: true },
+        },
+      },
       orderBy: [{ index: "asc" }, { createdAt: "asc" }],
     }),
     prisma.asset.findMany({
@@ -251,9 +266,22 @@ export async function getProjectForUser(
   return {
     ...toProjectView(project),
     editorDoc,
-    scenes: scenes.map((scene) =>
-      toSceneView(scene, clipDurations.get(scene.id) ?? null)
-    ),
+    scenes: scenes.map((scene) => {
+      const primaryRef = scene.references?.find((r) => r.asset.mime.startsWith("image/"));
+      const reference = primaryRef
+        ? {
+            id: primaryRef.id,
+            assetId: primaryRef.assetId,
+            filename: primaryRef.asset.filename,
+            mime: primaryRef.asset.mime,
+            url: `/api/assets/${primaryRef.assetId}`,
+          }
+        : null;
+      return {
+        ...toSceneView(scene, clipDurations.get(scene.id) ?? null),
+        reference,
+      };
+    }),
     assets: assets.map(toAssetView),
     issues: issues.map(toCriticIssueView),
     schemeText: project.schemeText,

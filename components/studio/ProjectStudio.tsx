@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { AssetView, ProjectDetailView, SceneView } from "@/lib/projects";
+import { VOICE_PERSONAS, type VoicePersona } from "@/lib/pipeline/prompts";
 import { statusLabel, statusTone, WORKING_STATUSES } from "./status";
 import CriticPanel from "./CriticPanel";
 import SceneCard from "./SceneCard";
@@ -89,6 +90,20 @@ export default function ProjectStudio({
     );
   }
 
+  async function handleToneChange(newTone: string) {
+    if (!detail || detail.tone === newTone) return;
+    setDetail((prev) => (prev ? { ...prev, tone: newTone } : prev));
+    try {
+      await fetch(`/api/projects/${projectId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tone: newTone }),
+      });
+    } catch {
+      await refresh();
+    }
+  }
+
   if (!detail) {
     return (
       <div className="dash-empty">
@@ -119,7 +134,10 @@ export default function ProjectStudio({
             {statusLabel(detail.status)}
           </span>{" "}
           {detail.language.toUpperCase()} · {detail.region ?? "—"} · {detail.sceneCount} scenes ·{" "}
-          {detail.aspect}
+          {detail.aspect} ·{" "}
+          <span className="chip chip-neutral" title="Voice Persona & Tone">
+            {VOICE_PERSONAS[detail.tone as VoicePersona]?.badge ?? "🏛️ Formal Broadcaster"}
+          </span>
         </p>
       </div>
 
@@ -278,12 +296,54 @@ export default function ProjectStudio({
             <div className="studio-library-head">
               <div>
                 <h2>Storyboard</h2>
-                <span className="studio-count">
-                  {detail.scenes.length} scenes · narration in {detail.language.toUpperCase()}
-                  {clipsReady > 0 && ` · ${clipsReady}/${totalScenes} clips ready`}
-                </span>
+                {clipsReady > 0 && (
+                  <span className="studio-count" style={{ display: "block", marginTop: "2px" }}>
+                    {clipsReady}/{totalScenes} clips ready
+                  </span>
+                )}
               </div>
-              <div className="project-actions">
+              <div className="project-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                {/* Voice persona capsule selector */}
+                <div style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+                  <select
+                    className="persona-capsule-select"
+                    value={detail.tone || "formal_broadcaster"}
+                    onChange={(e) => void handleToneChange(e.target.value)}
+                    title="Switch voice persona & tone for storyboard narration"
+                    style={{
+                      appearance: "none",
+                      WebkitAppearance: "none",
+                      MozAppearance: "none",
+                      borderRadius: "9999px",
+                      background: "rgba(18, 18, 24, 0.85)",
+                      border: "1px solid rgba(255, 255, 255, 0.16)",
+                      color: "var(--foreground, #ffffff)",
+                      padding: "6px 28px 6px 14px",
+                      fontSize: "0.82rem",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      lineHeight: 1.3,
+                      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.25)",
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    <option value="formal_broadcaster">🏛️ Formal Broadcaster</option>
+                    <option value="empathetic_mentor">🎓 Empathetic Mentor</option>
+                    <option value="youth_beneficiary">⚡ Youth Beneficiary</option>
+                  </select>
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      pointerEvents: "none",
+                      fontSize: "0.65rem",
+                      color: "var(--muted, #94a3b8)",
+                    }}
+                  >
+                    ▼
+                  </span>
+                </div>
+
                 <button
                   type="button"
                   className="btn btn-outline btn-sm"

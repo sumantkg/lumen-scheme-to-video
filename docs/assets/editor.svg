@@ -72,8 +72,9 @@
     <polygon points="307,88 323,98 307,108" fill="#ffffff"/>
     
     <text x="95" y="38" fill="#ffffff" font-size="11" font-weight="700">720p HD Preview Stage</text>
-    <rect x="95" y="145" width="220" height="24" rx="4" fill="#000000" opacity="0.75"/>
-    <text x="105" y="161" fill="#38bdf8" font-size="10" font-weight="600">লুমেন: সরকারী প্রকল্প প্রচার</text>
+    <text x="400" y="38" fill="#34d399" font-size="10" font-weight="600">Voiceover: Bengali (BN)</text>
+    <rect x="95" y="145" width="280" height="24" rx="4" fill="#000000" opacity="0.85" stroke="#38bdf8" stroke-width="0.8"/>
+    <text x="105" y="161" fill="#38bdf8" font-size="10" font-weight="700">KANYASHREE • ₹25,000 ANNUAL GRANT</text>
 
     <!-- Scrubber -->
     <rect x="80" y="192" width="465" height="6" rx="3" fill="#1e293b"/>

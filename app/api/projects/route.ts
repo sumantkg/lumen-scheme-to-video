@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       userId: user.id,
       title: body.title,
       language: body.language,
+      tone: body.tone ?? "formal_broadcaster",
       region: body.region,
       notes: body.notes ?? null,
       sceneCount: body.sceneCount,

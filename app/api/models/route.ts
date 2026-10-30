@@ -34,10 +34,8 @@ function hasEnvKey(name: ProviderName): boolean {
   switch (name) {
     case "gemini":
       return Boolean(process.env.GEMINI_API_KEY?.trim() || process.env.GOOGLE_API_KEY?.trim());
-    case "replicate":
-      return Boolean(process.env.REPLICATE_API_TOKEN?.trim());
-    case "fal":
-      return Boolean(process.env.FAL_KEY?.trim());
+    default:
+      return false;
   }
 }
 

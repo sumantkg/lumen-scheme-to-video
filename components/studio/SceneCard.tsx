@@ -29,8 +29,50 @@ export default function SceneCard({
   const [error, setError] = useState<string | null>(null);
 
   const [visualPrompt, setVisualPrompt] = useState(scene.visualPrompt);
+  const [reference, setReference] = useState(scene.reference ?? null);
+  const [uploadingRef, setUploadingRef] = useState(false);
+  const refInputRef = useRef<HTMLInputElement>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  async function handleReferenceUpload(file: File) {
+    if (!file.type.startsWith("image/")) return;
+    setUploadingRef(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch(`/api/projects/${projectId}/scenes/${scene.id}/references`, {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (res.ok && data.reference) {
+        setReference(data.reference);
+        onUpdated({ ...scene, reference: data.reference });
+      }
+    } catch {
+      // Ignored
+    } finally {
+      setUploadingRef(false);
+    }
+  }
+
+  async function handleRemoveReference() {
+    setUploadingRef(true);
+    try {
+      const res = await fetch(`/api/projects/${projectId}/scenes/${scene.id}/references`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setReference(null);
+        onUpdated({ ...scene, reference: null });
+      }
+    } catch {
+      // Ignored
+    } finally {
+      setUploadingRef(false);
+    }
+  }
 
   function startEdit() {
     setVisualPrompt(scene.visualPrompt);
@@ -233,6 +275,92 @@ export default function SceneCard({
           {scene.noLipSyncNote && (
             <p className="scene-lipsync">No lip sync: {scene.noLipSyncNote}</p>
           )}
+
+          {/* Scene Reference Image Slot */}
+          <div
+            style={{
+              margin: "0.6rem 0",
+              padding: "0.55rem 0.75rem",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px dashed rgba(255,255,255,0.12)",
+              borderRadius: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", overflow: "hidden" }}>
+              {reference ? (
+                <a
+                  href={reference.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Click to view reference image full size"
+                  style={{ display: "block", flexShrink: 0 }}
+                >
+                  <img
+                    src={reference.url}
+                    alt={reference.filename}
+                    style={{
+                      width: "38px",
+                      height: "38px",
+                      objectFit: "cover",
+                      borderRadius: "4px",
+                      border: "1px solid var(--cyan-bright)",
+                    }}
+                  />
+                </a>
+              ) : (
+                <span style={{ fontSize: "1.2rem", opacity: 0.7 }}>🖼️</span>
+              )}
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)" }}>
+                  {reference ? "Scene Reference Photo" : "No specific reference attached"}
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "var(--muted)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
+                  {reference
+                    ? reference.filename
+                    : "Uses project grounding photos as fallback for Gemini Omni conditioning."}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+              <input
+                ref={refInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleReferenceUpload(file);
+                }}
+              />
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                style={{ fontSize: "0.74rem", padding: "0.2rem 0.5rem" }}
+                disabled={uploadingRef}
+                onClick={() => refInputRef.current?.click()}
+                title="Attach or replace conditioning reference image for this scene"
+              >
+                {uploadingRef ? "Uploading…" : reference ? "Change" : "+ Attach photo"}
+              </button>
+              {reference && (
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  style={{ fontSize: "0.74rem", padding: "0.2rem 0.4rem", color: "#fca5a5" }}
+                  disabled={uploadingRef}
+                  onClick={() => void handleRemoveReference()}
+                  title="Remove reference from this scene"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
 
           <details className="scene-prompt">
             <summary>Visual prompt</summary>

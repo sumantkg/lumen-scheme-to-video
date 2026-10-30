@@ -5,6 +5,53 @@
  * on-screen micro-prompting, factual accuracy) apply in any setting.
  */
 
+export type VoicePersona = "formal_broadcaster" | "empathetic_mentor" | "youth_beneficiary";
+
+export interface VoicePersonaInfo {
+  id: VoicePersona;
+  label: string;
+  badge: string;
+  description: string;
+  promptVoiceTone: string;
+  scriptDelivery: string;
+}
+
+export const VOICE_PERSONAS: Record<VoicePersona, VoicePersonaInfo> = {
+  formal_broadcaster: {
+    id: "formal_broadcaster",
+    label: "Formal Government Broadcaster",
+    badge: "🏛️ Deep & Authoritative",
+    description: "Deep, authoritative, informative, and credible public-service delivery.",
+    promptVoiceTone: "deep, authoritative, formal, and trustworthy government public broadcaster tone",
+    scriptDelivery: "Authoritative, dignified, and precise public-service announcement delivery with clarity and national stature.",
+  },
+  empathetic_mentor: {
+    id: "empathetic_mentor",
+    label: "Empathetic Mentor / Teacher",
+    badge: "🎓 Warm & Reassuring",
+    description: "Warm, reassuring, inspiring, and supportive guidance.",
+    promptVoiceTone: "warm, reassuring, empathetic, gentle, and encouraging mentor tone",
+    scriptDelivery: "Warm, reassuring, and caring delivery like an inspiring teacher or family elder counseling a student.",
+  },
+  youth_beneficiary: {
+    id: "youth_beneficiary",
+    label: "Youth Beneficiary / Student",
+    badge: "⚡ Energetic & Relatable",
+    description: "Energetic, relatable, optimistic, and peer-to-peer connection.",
+    promptVoiceTone: "energetic, relatable, youthful, optimistic, and conversational peer tone",
+    scriptDelivery: "Vibrant, optimistic, relatable peer-to-peer delivery expressing excitement, ambition, and relief.",
+  },
+};
+
+export const DEFAULT_VOICE_PERSONA: VoicePersona = "formal_broadcaster";
+
+export function getVoicePersona(tone?: string | null): VoicePersonaInfo {
+  if (tone && tone in VOICE_PERSONAS) {
+    return VOICE_PERSONAS[tone as VoicePersona];
+  }
+  return VOICE_PERSONAS[DEFAULT_VOICE_PERSONA];
+}
+
 export interface PromptSettings {
   /** bn | en | hi | … */
   language: string;
@@ -18,6 +65,8 @@ export interface PromptSettings {
   localInstitutions: string;
   sceneCount: number;
   aspect: string;
+  tone: string;
+  persona: VoicePersonaInfo;
 }
 
 export const LANGUAGE_LABELS: Record<string, string> = {
@@ -31,8 +80,10 @@ export function promptSettings(input: {
   region?: string | null;
   sceneCount?: number;
   aspect?: string | null;
+  tone?: string | null;
 }): PromptSettings {
   const language = input.language || "bn";
+  const persona = getVoicePersona(input.tone);
   return {
     language,
     languageLabel: LANGUAGE_LABELS[language] ?? "English",
@@ -47,6 +98,8 @@ export function promptSettings(input: {
         : `${input.region}'s premier public universities, libraries, district administrative centers, and landmarks`,
     sceneCount: Math.min(8, Math.max(4, Number(input.sceneCount) || 6)),
     aspect: input.aspect || "16:9",
+    tone: persona.id,
+    persona,
   };
 }
 
@@ -143,8 +196,10 @@ ${getSceneSequenceGuideline(settings.sceneCount)}
    - Visual settings must be authentic to ${settings.region} (architecture, recognizable landmarks such as ${settings.localInstitutions}, regional attire, everyday life).
 
 8. AUDIO & NARRATION:
+   - Voice Persona: ${settings.persona.label} (${settings.persona.badge}).
+   - Voice Style: ${settings.persona.scriptDelivery}
    - Narration starts at 1.0s or 1.2s. Ends at 8.0s to 8.5s (leaving at least 1.5s silent buffer before scene transitions).
-   - Voiceover MUST be in natural, everyday ${settings.languageLabel}, spoken by ${settings.audience}.
+   - Voiceover MUST be in natural, everyday ${settings.languageLabel}, spoken with a ${settings.persona.promptVoiceTone}.
 
 9. HIGHLY DETAILED VISUAL PROMPT STRUCTURE:
    The "visual_prompt" string for EACH scene MUST follow this EXACT multi-section layout:
@@ -154,16 +209,16 @@ ${getSceneSequenceGuideline(settings.sceneCount)}
    VISUAL SEQUENCE: [Detailed shot-by-shot progression]
    USER NOTES APPLIED: [How the user's custom visual tone/notes are reflected in this scene]
    NARRATION: The narration MUST be spoken entirely in ${settings.languageLabel}. Use this EXACT narration: "[${settings.languageLabel} text]"
-   VOICE: Natural ${settings.languageLabel} voice. Tone: formal, informative, and warm.
+   VOICE: Natural ${settings.languageLabel} voice. Persona: ${settings.persona.label} (${settings.persona.promptVoiceTone}).
    AUDIO: ${settings.languageLabel} narration primary, subtle ambient background.
-   ON-SCREEN TEXT: [List short bullet phrases in the local language and numerals]
+   ON-SCREEN TEXT: [List short key highlight bullet phrases and figures in CLEAR ENGLISH, e.g. "75% Credit Guarantee", "Up to ₹7.5 Lakh", "3% Interest Subvention"]
    CAMERA: [Detailed camera framing for ${settings.aspect}]
    CHARACTER CONSISTENCY: Realistic ${settings.region} citizens and beneficiaries in everyday clothing.
    VISUAL STYLE: Photorealistic, cinematic documentary. No anime, no CGI avatars.
    SYNCHRONIZATION: Visuals correspond to narration with zero character speaking.
    FACTUAL CONSTRAINTS: [Facts from document — amounts, percentages, deadlines]
    NEGATIVE CONSTRAINTS: No talking heads, no lip sync, no distorted text, no watermarks.
-   FINAL PRIORITY: 1. Exact ${settings.sceneCount} scene count 2. Exact ${settings.languageLabel} narration 3. Strict ${settings.aspect} framing 4. User notes applied.
+   (Do NOT include internal meta notes or "FINAL PRIORITY" instructions inside the visual prompt itself).
 
 You must respond ONLY with a valid JSON object matching the exact schema specified.
 `.trim();
@@ -177,13 +232,17 @@ export function buildSceneUserPrompt(input: {
   region: string;
   sceneCount: number;
   aspect: string;
+  persona?: VoicePersonaInfo;
 }): string {
   const numImages = input.images?.length ?? 0;
   const imgNote =
     numImages > 0
-      ? `\nUser uploaded ${numImages} grounding photo(s): ${input.images
+      ? `\n🖼️ VISUAL GROUNDING & REFERENCE PHOTOS ATTACHED (${numImages} image(s): ${input.images
           ?.map((img) => img.filename)
-          .join(", ")}. Strictly analyze visual architectural details (facade, library halls, campus gates) from these images and incorporate them into the visual prompts.`
+          .join(", ")}):
+- You MUST carefully examine the visual details, architectural cues, building facades, uniforms, logos, and regional landmarks present in these uploaded reference photos.
+- In any scene depicting institutions, beneficiary registration, classroom environments, or government centers, explicitly instruct the camera and visual prompt to match the uploaded reference visuals!
+- Tag referenced scenes by noting specific visual elements from "${input.images?.map((img) => img.filename).join(", ")}" in "wb_grounding_elements".`
       : "";
 
   return `
@@ -193,6 +252,7 @@ export function buildSceneUserPrompt(input: {
 2. TARGET ASPECT RATIO: ${input.aspect} (frame all visual prompts and camera shots for ${input.aspect}).
 3. REGION / CONTEXT: ${input.region}.
 4. NARRATION LANGUAGE: ${input.languageLabel}.
+5. VOICE PERSONA & TONE: ${input.persona?.label ?? "Formal Government Broadcaster"} (${input.persona?.promptVoiceTone ?? "deep, authoritative, formal"}).
 ============================================================
 
 ============================================================
@@ -228,12 +288,12 @@ JSON SCHEMA TO RETURN (MUST CONTAIN AN ARRAY OF EXACTLY ${input.sceneCount} SCEN
       "scene_number": 1,
       "scene_title": "Scene 1 Title",
       "duration_seconds": 10.0,
-      "visual_prompt": "Create a 10-second photorealistic, cinematic government awareness video scene.\\nSCENE PURPOSE: [Detailed scene objective]\\nVISUAL SETTING: [Authentic setting in ${input.region}, framed for ${input.aspect}]\\nVISUAL SEQUENCE: [Detailed shot-by-shot progression]\\nUSER NOTES APPLIED: [How user directives are reflected]\\nNARRATION: \\\"[Exact ${input.languageLabel} voiceover]\\\"\\nVOICE: Natural ${input.languageLabel} voice. Tone: formal, informative, and warm.\\nAUDIO: ${input.languageLabel} narration primary, subtle ambient background sound.\\nON-SCREEN TEXT: [List short bullet phrases in local language & numerals]\\nCAMERA: [Detailed camera framing strictly for ${input.aspect} composition]\\nCHARACTER CONSISTENCY: Realistic ${input.region} citizens and beneficiaries in everyday clothing.\\nVISUAL STYLE: Photorealistic, cinematic documentary B-roll in ${input.aspect}.\\nNEGATIVE CONSTRAINTS: No talking heads, no lip sync, no distorted text, no watermarks.",
+      "visual_prompt": "Create a 10-second photorealistic, cinematic government awareness video scene.\\nSCENE PURPOSE: [Detailed scene objective]\\nVISUAL SETTING: [Authentic setting in ${input.region}, framed for ${input.aspect}]\\nVISUAL SEQUENCE: [Detailed shot-by-shot progression]\\nUSER NOTES APPLIED: [How user directives are reflected]\\nNARRATION: \\\"[Exact ${input.languageLabel} voiceover]\\\"\\nVOICE: Natural ${input.languageLabel} voice. Tone: formal, informative, and warm.\\nAUDIO: ${input.languageLabel} narration primary, subtle ambient background sound.\\nON-SCREEN TEXT: [List short key highlight bullet phrases and figures in CLEAR ENGLISH, e.g. \\\"75% Credit Guarantee\\\", \\\"Up to ₹7.5 Lakh\\\"]\\nCAMERA: [Detailed camera framing strictly for ${input.aspect} composition]\\nCHARACTER CONSISTENCY: Realistic ${input.region} citizens and beneficiaries in everyday clothing.\\nVISUAL STYLE: Photorealistic, cinematic documentary B-roll in ${input.aspect}.\\nNEGATIVE CONSTRAINTS: No talking heads, no lip sync, no distorted text, no watermarks.",
       "camera_angle": "E.g., Wide establishing shot framed for ${input.aspect}...",
       "voiceover_bengali": "${input.languageLabel} voiceover script",
       "narration_start_second": 1.0,
       "narration_end_second": 8.2,
-      "onscreen_text": ["Short bullet phrases"],
+      "onscreen_text": ["Key highlight in English 1", "Key highlight in English 2"],
       "wb_grounding_elements": ["Specific local visual cues"],
       "no_lip_sync_enforcement": "Reason why no lip sync occurs"
     }
@@ -262,8 +322,8 @@ INSPECTION CHECKLIST:
 4. [NATURAL EVERYDAY LANGUAGE]:
    - VIOLATION: Stiff syntax, textbook grammar errors, or machine-translated literal phrases.
    - CORRECTION: Convert to natural, modern everyday ${settings.languageLabel} spoken by ${settings.audience} that they immediately understand.
-5. [MICRO-PROMPTING FOR ON-SCREEN TEXT]:
-   - Ensure crisp, readable bullet phrases and numbers (e.g. "৬০% নম্বর", "আড়াই লক্ষ টাকা", "svmcm.wbhed.gov.in") are explicitly listed.
+5. [MICRO-PROMPTING FOR ON-SCREEN TEXT IN ENGLISH]:
+   - CRITICAL REQUIREMENT: All on-screen text highlights must be in CLEAR ENGLISH (e.g. "60% Marks Required", "₹2.5 Lakh Income Ceiling", "75% Credit Guarantee", "svmcm.wbhed.gov.in"), NOT in regional script, to avoid visual distortion in video diffusion models. Spoken voiceover remains strictly in ${settings.languageLabel}.
 6. [DOCUMENT FACTUAL ACCURACY]:
    - Confirm benefits, income ceiling, marks criteria, and helpline numbers match the original scheme text.
 7. [SCENE COUNT & NOTES RETENTION]:
@@ -274,6 +334,7 @@ INSPECTION CHECKLIST:
    - The "visual_prompt" for each scene MUST retain the full professional multi-section breakdown:
      SCENE PURPOSE:, VISUAL SETTING:, VISUAL SEQUENCE:, USER NOTES APPLIED:, NARRATION:, VOICE:, AUDIO:, ON-SCREEN TEXT:, CAMERA:, CHARACTER CONSISTENCY:, VISUAL STYLE:, NEGATIVE CONSTRAINTS:.
    - DO NOT collapse "visual_prompt" into a simple 1 or 2 sentence summary! Keep all structured headings intact!
+   - Do NOT include internal meta notes or "FINAL PRIORITY" instructions inside the visual prompt itself.
 
 You must return a JSON response containing:
 - compliance_score: integer 0-100
@@ -304,7 +365,7 @@ ${input.currentPlanJson}
 """
 
 Please audit every scene meticulously, record all defects/improvements, and output the refined compliant scenes.
-IMPORTANT: You MUST keep the full multi-section layout for every "visual_prompt" (SCENE PURPOSE:, VISUAL SETTING:, VISUAL SEQUENCE:, USER NOTES APPLIED:, NARRATION:, VOICE:, AUDIO:, ON-SCREEN TEXT:, CAMERA:, CHARACTER CONSISTENCY:, VISUAL STYLE:, NEGATIVE CONSTRAINTS:). Do not compress it into a short blurb!
+IMPORTANT: You MUST keep the full multi-section layout for every "visual_prompt" (SCENE PURPOSE:, VISUAL SETTING:, VISUAL SEQUENCE:, USER NOTES APPLIED:, NARRATION:, VOICE:, AUDIO:, ON-SCREEN TEXT:, CAMERA:, CHARACTER CONSISTENCY:, VISUAL STYLE:, NEGATIVE CONSTRAINTS:). Do not compress it into a short blurb, and do NOT include "FINAL PRIORITY:" or meta instructions in the visual prompt!
 
 JSON SCHEMA TO RETURN:
 {
@@ -326,12 +387,12 @@ JSON SCHEMA TO RETURN:
       "scene_number": 1,
       "scene_title": "Scene 1 Title",
       "duration_seconds": 10.0,
-      "visual_prompt": "SCENE PURPOSE: ...\\nVISUAL SETTING: ...\\nVISUAL SEQUENCE: ...\\nUSER NOTES APPLIED: ...\\nNARRATION: ...\\nVOICE: ...\\nAUDIO: ...\\nON-SCREEN TEXT: ...\\nCAMERA: ...\\nCHARACTER CONSISTENCY: ...\\nVISUAL STYLE: ...\\nNEGATIVE CONSTRAINTS: ...",
+      "visual_prompt": "SCENE PURPOSE: ...\\nVISUAL SETTING: ...\\nVISUAL SEQUENCE: ...\\nUSER NOTES APPLIED: ...\\nNARRATION: ...\\nVOICE: ...\\nAUDIO: ...\\nON-SCREEN TEXT: [English bullet highlights]\\nCAMERA: ...\\nCHARACTER CONSISTENCY: ...\\nVISUAL STYLE: ...\\nNEGATIVE CONSTRAINTS: ...",
       "camera_angle": "Camera angle...",
       "voiceover_bengali": "Natural everyday conversational voiceover in the project language...",
       "narration_start_second": 1.0,
       "narration_end_second": 8.0,
-      "onscreen_text": ["On screen bullet 1", "On screen bullet 2"],
+      "onscreen_text": ["Key highlight in English 1", "Key highlight in English 2"],
       "wb_grounding_elements": ["Local landmarks"],
       "no_lip_sync_enforcement": "Explicit rule description"
     }
@@ -360,9 +421,13 @@ export function formatRichVisualPrompt(
     aspect: string;
     languageLabel: string;
     additionalNotes?: string | null;
+    persona?: VoicePersonaInfo | null;
   }
 ): string {
-  const current = scene.visual_prompt.trim();
+  // Strip any accidental FINAL PRIORITY or meta-instruction lines from prompt
+  const current = scene.visual_prompt
+    .replace(/(?:^|\n)\s*FINAL PRIORITY:[\s\S]*$/i, "")
+    .trim();
 
   // If it already contains the detailed multi-section headings, keep it intact
   const hasSections =
@@ -391,6 +456,9 @@ export function formatRichVisualPrompt(
     settings.additionalNotes?.trim() || "Authentic regional documentary styling";
   const negative =
     scene.no_lip_sync_enforcement || "No talking heads, no lip sync, no distorted text.";
+  const personaDesc = settings.persona
+    ? `${settings.persona.label} (${settings.persona.promptVoiceTone})`
+    : "Formal Government Broadcaster (deep, authoritative, formal)";
 
   return [
     `Create a 10-second photorealistic, cinematic government awareness video scene.`,
@@ -399,7 +467,7 @@ export function formatRichVisualPrompt(
     `VISUAL SEQUENCE: ${current}`,
     `USER NOTES APPLIED: ${notesApplied}`,
     `NARRATION: ${narration}`,
-    `VOICE: Natural ${settings.languageLabel} voice. Tone: formal, informative, and warm.`,
+    `VOICE: Natural ${settings.languageLabel} voice. Persona: ${personaDesc}.`,
     `AUDIO: ${settings.languageLabel} narration primary, subtle ambient background sound.`,
     `ON-SCREEN TEXT: ${onscreen}`,
     `CAMERA: ${camera}`,

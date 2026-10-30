@@ -41,6 +41,7 @@ export interface CriticInput extends CriticAuthorization {
   schemeText: string;
   groundingNotes?: string | null;
   language?: string | null;
+  tone?: string | null;
   region?: string | null;
   sceneCount?: number | null;
   aspect?: string | null;
@@ -59,6 +60,7 @@ function toIssue(issue: { scene_number?: number | null; category: string; severi
 export async function runCritic(input: CriticInput): Promise<CriticResult> {
   const settings = promptSettings({
     language: input.language,
+    tone: input.tone,
     region: input.region,
     sceneCount: input.sceneCount ?? input.scenes.length,
     aspect: input.aspect ?? "16:9",
@@ -137,6 +139,7 @@ export async function runCritic(input: CriticInput): Promise<CriticResult> {
             aspect: settings.aspect,
             languageLabel: settings.languageLabel,
             additionalNotes: input.groundingNotes,
+            persona: settings.persona,
           }
         );
         return {

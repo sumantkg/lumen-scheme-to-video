@@ -26,7 +26,7 @@ export default function Nav() {
       .then((data) => {
         if (active && data?.user) setUser({ name: data.user.name });
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       active = false;
     };

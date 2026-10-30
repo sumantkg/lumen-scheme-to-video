@@ -19,6 +19,7 @@ export interface ScenePlanInput {
   imageFilenames?: string[];
   additionalNotes?: string | null;
   language?: string | null;
+  tone?: string | null;
   region?: string | null;
   sceneCount?: number | null;
   aspect?: string | null;
@@ -60,6 +61,7 @@ export async function generateScenePlan(input: ScenePlanInput): Promise<ScenePla
 
   const settings = promptSettings({
     language: input.language,
+    tone: input.tone,
     region: input.region,
     sceneCount: input.sceneCount ?? 6,
     aspect: input.aspect ?? "16:9",
@@ -74,6 +76,7 @@ export async function generateScenePlan(input: ScenePlanInput): Promise<ScenePla
     region: settings.region,
     sceneCount: settings.sceneCount,
     aspect: settings.aspect,
+    persona: settings.persona,
   });
 
   const raw = await generateJson({
@@ -213,6 +216,7 @@ export async function generateScenePlan(input: ScenePlanInput): Promise<ScenePla
         aspect: settings.aspect,
         languageLabel: settings.languageLabel,
         additionalNotes: input.additionalNotes,
+        persona: settings.persona,
       }
     );
 

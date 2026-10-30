@@ -5,7 +5,7 @@ import { LLM_PROVIDERS } from "@/lib/llm/types";
 import { ASPECT_RATIOS } from "@/lib/providers/types";
 
 /** Video providers a project can choose (kept literal to stay import-light). */
-const VIDEO_PROVIDER_VALUES = ["gemini", "replicate", "fal"] as const;
+const VIDEO_PROVIDER_VALUES = ["gemini"] as const;
 
 export const signupSchema = z.object({
   name: z
@@ -47,6 +47,7 @@ export const projectCreateSchema = z.object({
     .trim()
     .min(2, { error: "Pick a narration language." })
     .default("bn"),
+  tone: z.string().trim().default("formal_broadcaster"),
   region: z.string().trim().min(1).max(120).default("West Bengal"),
   notes: z.string().trim().max(2000).optional().nullable(),
   sceneCount: z.coerce
@@ -78,6 +79,7 @@ export type ProjectCreateInput = z.infer<typeof projectCreateSchema>;
 export const projectSettingsSchema = z.object({
   title: z.string().trim().min(2).max(120).optional(),
   language: z.string().trim().min(2).max(20).optional(),
+  tone: z.string().trim().optional(),
   region: z.string().trim().min(1).max(120).optional(),
   notes: z.string().trim().max(2000).optional().nullable(),
   sceneCount: z.coerce.number().int().min(4).max(8).optional(),

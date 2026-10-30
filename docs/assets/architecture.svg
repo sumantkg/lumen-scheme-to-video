@@ -110,7 +110,7 @@
       <rect width="300" height="68" rx="8" fill="#182338" stroke="#38bdf8" stroke-width="1"/>
       <text x="16" y="26" fill="#38bdf8" font-size="14" font-weight="700">🎬 Storyboard Studio</text>
       <text x="16" y="46" fill="#94a3b8" font-size="11">Visual prompts, live video previews</text>
-      <text x="16" y="59" fill="#64748b" font-size="10">Direct prompt editing &amp; scene re-rendering</text>
+      <text x="16" y="59" fill="#64748b" font-size="10">Voice persona tone &amp; dual reference photos</text>
     </g>
 
     <!-- Card B: NLE Video Editor -->
@@ -266,7 +266,7 @@
       <text x="16" y="46" fill="#f8fafc" font-size="12" font-weight="600">Gemini 3.8 Flash (Default)</text>
       <text x="16" y="62" fill="#94a3b8" font-size="11">• 4–8 Scene narrative breakdown</text>
       <text x="16" y="77" fill="#94a3b8" font-size="11">• Bengali / Hindi / Eng scriptwriting</text>
-      <text x="16" y="92" fill="#64748b" font-size="10">• 5-point automated compliance critic</text>
+      <text x="16" y="92" fill="#64748b" font-size="10">• 8-point automated compliance critic (≥90)</text>
     </g>
 
     <!-- Sub-card B: Video Models -->
@@ -274,8 +274,8 @@
       <rect width="300" height="106" rx="8" fill="#281a38" stroke="#c084fc" stroke-width="1"/>
       <text x="16" y="24" fill="#c084fc" font-size="14" font-weight="700">🎥 Video Synthesis</text>
       <text x="16" y="46" fill="#f8fafc" font-size="12" font-weight="600">Multi-Provider Engine</text>
-      <text x="16" y="62" fill="#94a3b8" font-size="11">• Gemini Omni 1.1 Flash (Cloud)</text>
-      <text x="16" y="77" fill="#94a3b8" font-size="11">• Replicate (Minimax) / Fal.ai</text>
+      <text x="16" y="62" fill="#94a3b8" font-size="11">• Gemini Omni 1.1 Flash (Cloud Video)</text>
+      <text x="16" y="77" fill="#38bdf8" font-size="11">• Dual reference photo conditioning</text>
       <text x="16" y="92" fill="#34d399" font-size="10">✓ Offline procedural fallback generator</text>
     </g>
 

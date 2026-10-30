@@ -43,6 +43,7 @@ export default function ProjectWizard() {
 
   const [title, setTitle] = useState("");
   const [language, setLanguage] = useState("bn");
+  const [tone, setTone] = useState("formal_broadcaster");
   const [region, setRegion] = useState("West Bengal");
   const [sceneCount, setSceneCount] = useState(6);
   const [aspect, setAspect] = useState<(typeof ASPECTS)[number]>("16:9");
@@ -55,12 +56,23 @@ export default function ProjectWizard() {
   const [useCritic, setUseCritic] = useState(true);
   const [schemeText, setSchemeText] = useState("");
   const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [referenceFiles, setReferenceFiles] = useState<File[]>([]);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const previewUrl = useMemo(
     () => (previewFile ? URL.createObjectURL(previewFile) : null),
     [previewFile]
   );
   const [notes, setNotes] = useState("");
+
+  const handleAddReferenceFiles = (files: FileList | null) => {
+    if (!files) return;
+    const imagesOnly = Array.from(files).filter((f) => f.type.startsWith("image/"));
+    setReferenceFiles((prev) => [...prev, ...imagesOnly].slice(0, 5));
+  };
+
+  const handleRemoveReferenceFile = (index: number) => {
+    setReferenceFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
   useEffect(() => {
     if (!error) return;
@@ -127,6 +139,7 @@ export default function ProjectWizard() {
         body: JSON.stringify({
           title: title.trim() || "Scheme video",
           language,
+          tone,
           region,
           notes: notes.trim() || null,
           sceneCount,
@@ -174,6 +187,21 @@ export default function ProjectWizard() {
         });
       }
 
+      // Upload reference / grounding photos if provided
+      if (referenceFiles.length > 0) {
+        for (const refFile of referenceFiles) {
+          try {
+            const form = new FormData();
+            form.append("file", refFile);
+            form.append("kind", "grounding_image");
+            form.append("projectId", projectId);
+            await fetch("/api/uploads", { method: "POST", body: form });
+          } catch {
+            // Non-critical if an individual optional reference upload fails
+          }
+        }
+      }
+
       const genRes = await fetch(`/api/projects/${projectId}/generate`, {
         method: "POST",
       });
@@ -218,7 +246,7 @@ export default function ProjectWizard() {
             />
           </label>
 
-          <div className="wizard-row">
+          <div className="wizard-row-3">
             <label className="field">
               <span className="field-label">Narration language</span>
               <select
@@ -236,6 +264,20 @@ export default function ProjectWizard() {
             </label>
 
             <label className="field">
+              <span className="field-label">Voice persona &amp; tone</span>
+              <select
+                className="field-input"
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                disabled={busy}
+              >
+                <option value="formal_broadcaster">🏛️ Formal Broadcaster (Deep, Authoritative)</option>
+                <option value="empathetic_mentor">🎓 Empathetic Mentor (Warm, Reassuring)</option>
+                <option value="youth_beneficiary">⚡ Youth Beneficiary (Energetic, Relatable)</option>
+              </select>
+            </label>
+
+            <label className="field">
               <span className="field-label">Region / context</span>
               <input
                 className="field-input"
@@ -246,7 +288,9 @@ export default function ProjectWizard() {
                 disabled={busy}
               />
             </label>
+          </div>
 
+          <div className="wizard-row-2" style={{ marginTop: "14px" }}>
             <label className="field">
               <span className="field-label">Scenes</span>
               <select
@@ -257,7 +301,7 @@ export default function ProjectWizard() {
               >
                 {[4, 5, 6, 7, 8].map((n) => (
                   <option key={n} value={n}>
-                    {n} scenes
+                    {n} scenes (approx {n * 10} seconds)
                   </option>
                 ))}
               </select>
@@ -271,11 +315,9 @@ export default function ProjectWizard() {
                 onChange={(e) => setAspect(e.target.value as (typeof ASPECTS)[number])}
                 disabled={busy}
               >
-                {ASPECTS.map((a) => (
-                  <option key={a} value={a}>
-                    {a}
-                  </option>
-                ))}
+                <option value="16:9">16:9 — Cinematic Widescreen (Landscape)</option>
+                <option value="9:16">9:16 — Vertical Mobile (Reels / Shorts)</option>
+                <option value="1:1">1:1 — Square Feed (1:1)</option>
               </select>
             </label>
           </div>
@@ -341,6 +383,78 @@ export default function ProjectWizard() {
               </span>
             )}
           </label>
+
+          {/* Reference & Grounding Images Upload */}
+          <div className="field" style={{ marginTop: "1rem" }}>
+            <span className="field-label" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span>Visual reference &amp; grounding photos (optional)</span>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>Up to 5 photos</span>
+            </span>
+            <p style={{ margin: "2px 0 8px", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.4 }}>
+              Upload photos of landmarks, government offices, student uniforms, or scheme banners. Gemini analyzes their visual features to ground the visual prompts, and Gemini Omni uses them as direct video conditioning references.
+            </p>
+            <input
+              className="field-input wizard-file"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              multiple
+              onChange={(e) => handleAddReferenceFiles(e.target.files)}
+              disabled={busy || referenceFiles.length >= 5}
+            />
+
+            {referenceFiles.length > 0 && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "10px" }}>
+                {referenceFiles.map((file, idx) => (
+                  <div
+                    key={`${file.name}-${idx}`}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: "6px",
+                      padding: "4px 8px",
+                      fontSize: "0.8rem",
+                      color: "var(--foreground)",
+                    }}
+                  >
+                    <span>🖼️ {file.name.length > 20 ? `${file.name.slice(0, 18)}…` : file.name}</span>
+                    <button
+                      type="button"
+                      className="asset-view-btn"
+                      style={{ padding: "2px", width: "18px", height: "18px" }}
+                      aria-label={`Preview ${file.name}`}
+                      title={`Preview ${file.name}`}
+                      onClick={() => setPreviewFile(file)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveReferenceFile(idx)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "var(--muted)",
+                        cursor: "pointer",
+                        padding: "0 2px",
+                        fontSize: "0.95rem",
+                        lineHeight: 1,
+                      }}
+                      title="Remove image"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ── Step 3: Brain & Generation Pipeline ── */}
@@ -390,14 +504,14 @@ export default function ProjectWizard() {
             </label>
 
             <label className="field">
-              <span className="field-label">Video Generation Provider</span>
+              <span className="field-label">Video Generation Engine</span>
               <select
                 className="field-input"
                 value={videoProvider}
                 onChange={(e) => setVideoProvider(e.target.value as VideoProviderName)}
                 disabled={busy}
               >
-                <option value="gemini">Google Gemini (Omni / gemini-omni-1.1-flash)</option>
+                <option value="gemini">Google Gemini Omni (gemini-omni-1.1-flash)</option>
               </select>
             </label>
           </div>

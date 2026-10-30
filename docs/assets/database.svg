@@ -70,11 +70,11 @@
     <rect x="0" y="0" width="260" height="28" rx="8" fill="#b45309"/>
     <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🎬 VideoProject (Core Aggregate)</text>
     <text x="12" y="48" fill="#fbbf24" font-size="11" font-family="monospace">id (PK, CUID) · userId (FK)</text>
-    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">title · targetRegion · language</text>
-    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">schemeText (Extracted Policy)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">title · region · language · tone</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">schemeText · notes · sceneCount</text>
     <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">status (DRAFT, PLANNING, DONE)</text>
-    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">criticScore (0–100 Int)</text>
-    <text x="12" y="148" fill="#94a3b8" font-size="11" font-family="monospace">finalVideoKey (Local Storage Path)</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">criticScore (0–100 Int, ≥90 Pass)</text>
+    <text x="12" y="148" fill="#94a3b8" font-size="11" font-family="monospace">finalVideoKey (storage/final.mp4)</text>
     <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">editorDoc (JSON NLE State)</text>
   </g>
 
@@ -84,12 +84,12 @@
     <rect x="0" y="0" width="250" height="28" rx="8" fill="#0369a1"/>
     <text x="12" y="18" fill="#ffffff" font-size="11" font-weight="700">🎞️ Scene</text>
     <text x="12" y="48" fill="#38bdf8" font-size="11" font-family="monospace">id (PK) · projectId (FK)</text>
-    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">index (Int, 1..N Sequence)</text>
-    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">title · narration · duration</text>
-    <text x="12" y="108" fill="#94a3b8" font-size="11" font-family="monospace">visualPrompt (Editable Text)</text>
-    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">status (PENDING, RENDERING...)</text>
-    <text x="12" y="148" fill="#34d399" font-size="11" font-family="monospace">clipKey (storage/projects/scene.mp4)</text>
-    <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">thumbKey (thumb.jpg)</text>
+    <text x="12" y="68" fill="#94a3b8" font-size="11" font-family="monospace">index (Int) · durationSec</text>
+    <text x="12" y="88" fill="#94a3b8" font-size="11" font-family="monospace">title · narration (Localized)</text>
+    <text x="12" y="108" fill="#38bdf8" font-size="11" font-family="monospace">onScreenText (English Banner)</text>
+    <text x="12" y="128" fill="#94a3b8" font-size="11" font-family="monospace">visualPrompt (Sectioned Style)</text>
+    <text x="12" y="148" fill="#34d399" font-size="11" font-family="monospace">clipKey (scene-*.mp4)</text>
+    <text x="12" y="168" fill="#94a3b8" font-size="11" font-family="monospace">refImage1Key · refImage2Key</text>
   </g>
 
   <!-- PipelineTask Table -->

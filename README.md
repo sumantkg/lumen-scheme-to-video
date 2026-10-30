@@ -51,10 +51,11 @@ Lumen ingests these policy PDFs, parses the underlying rules, and autonomously p
 
 - **Multimodal Document Ingestion**: Upload native PDFs, Word documents (`.docx`), or plain text with instant inline previewing, dedicated tab inspection, automatic OCR, and structured text extraction in a unified single-card project wizard.
 - **Multilingual AI Storyboard Engine**: Automatically segments complex schemes into 4–8 sequential scenes with localized narration (Bengali, Hindi, English), precise timing marks, and on-screen text banners.
+- **Voice Persona & Tone Switcher**: Tailor outreach videos with distinct directorial narration personas: *Formal Government Broadcaster* (deep, authoritative), *Empathetic Mentor / Teacher* (warm, reassuring), and *Youth Beneficiary / Student* (energetic, relatable).
 - **AI Critic Auditing**: Evaluates scene scripts before generation to guarantee zero unwanted lip-sync artifacts, strict regional visual grounding, and temporal audio-padding.
 - **Dual-LLM Critic Architecture**: Run an independent model or provider (e.g. OpenAI GPT-4o or a distinct Gemini model) for the AI Critic agent to perform objective, unbiased compliance audits on storyboards.
-- **Visual Prompt Editing**: Fine-tune individual scene prompts right from the storyboard card and re-render only the affected clips.
-- **Local & Cloud Video Synthesis**: Powered by **Google Gemini Omni 1.1 Flash** for state-of-the-art AI video generation, alongside a **100% offline FFmpeg procedural demo generator** that requires zero cloud credits.
+- **Visual Prompt Editing & Reference Photos**: Fine-tune individual scene prompts right from the storyboard card, attach visual reference photos per scene or project-wide, and re-render only the affected clips.
+- **Reference-Conditioned Video Synthesis**: Powered by **Google Gemini Omni 1.1 Flash** for state-of-the-art AI video generation with direct reference image conditioning, alongside a **100% offline FFmpeg procedural demo generator** that requires zero cloud credits.
 - **Non-Linear Video Editor (NLE)**: Arrange clips on an interactive multi-track timeline with sub-second trimming, 20+ cinematic transition filters, BGM audio ducking, and one-click master MP4 compilation.
 - **Hardware-Isolated Background Queue**: Dedicated worker architecture ensures that heavy AI generation, polling, and FFmpeg encoding never block web server responsiveness.
 - **Enterprise-Grade Key Custody**: User-provided API keys are encrypted at rest with **AES-256-GCM** using unique per-secret nonces and authentication tags.
@@ -99,9 +100,10 @@ Lumen executes an autonomous **5-stage sequential transformation pipeline** that
 ---
 
 #### 🧠 Stage 2: Multimodal Scene Planning (`generate_scenes`)
-* **Input**: `schemeText` + target region (e.g. *West Bengal*) + narration language (e.g. *Bengali*) + scene count (exact 4, 5, 6, 7, or 8 scenes) + aspect ratio (`16:9`, `9:16`, `1:1`) + user storyboard notes.
+* **Input**: `schemeText` + target region (e.g. *West Bengal*) + narration language (e.g. *Bengali*) + voice persona & tone (*Formal Broadcaster*, *Empathetic Mentor*, or *Youth Beneficiary*) + scene count (exact 4, 5, 6, 7, or 8 scenes) + aspect ratio (`16:9`, `9:16`, `1:1`) + user storyboard notes.
 * **Processing**:
   * Prompts **Gemini 3.8 Flash** with zero-shot system guidelines and an explicit structural breakdown for the exact requested scene count (4 to 8 scenes).
+  * **Voice Persona & Directorial Tone**: Embeds distinct emotional and delivery guidelines into the script generation and visual directions based on the chosen persona (*🏛️ Formal Broadcaster*, *🎓 Empathetic Mentor*, or *⚡ Youth Beneficiary*).
   * **Strict Scene Count Enforcement**: Programmatic recovery and synthesis guarantees that the storyboard yields exactly the chosen scene count (e.g., choosing 8 scenes returns all 8 scenes without truncation to 5).
   * **Aspect Ratio & Framing**: Embeds targeted framing instructions (e.g. `9:16` vertical portrait mobile framing vs. `16:9` widescreen) into every scene's `visualPrompt` and `cameraAngle`.
   * **User Directives Reflection**: Weaves custom user instructions (specific people, settings, visual tone, do's & don'ts) directly into scene visual prompts and directorial guidelines.
@@ -113,14 +115,15 @@ Lumen executes an autonomous **5-stage sequential transformation pipeline** that
 #### 🛡️ Stage 3: AI Critic Auditing & Refinement (`run_critic`)
 * **Input**: Generated scene plan + original scheme policy document + target aspect ratio + exact scene count + independent Critic LLM configuration (e.g., separate Gemini model or OpenAI GPT-4o).
 * **Processing**:
-  * Automated compliance audit checking 6 core quality criteria:
+  * Automated compliance audit checking 8 core quality criteria:
     1. **Regional Visual Grounding**: Ensures authentic architectural, cultural, and environmental cues.
     2. **Lip-Sync Elimination**: Enforces B-roll documentary visuals so synthesized voiceovers never clash with talking human faces.
     3. **Pacing & Buffer Timings**: Validates that narration comfortably fits within allocated seconds.
     4. **Fact Accuracy**: Cross-checks eligibility criteria, scholarship amounts, and deadline dates against the source document.
     5. **Tone & Dignity**: Verifies inspiring, clear, public-service framing.
     6. **Scene Count & Notes Retention**: Audits and preserves all $N$ scenes without merging or dropping items.
-    7. **Rich Multi-Section Prompt Structure**: Guarantees that refined visual prompts retain complete broadcast directions (`AUDIO`, `VISUAL SETTING`, `ON-SCREEN TEXT`, `CAMERA`, `USER NOTES APPLIED`, `NEGATIVE CONSTRAINTS`) rather than collapsing into brief summaries.
+    7. **Rich Multi-Section Prompt Structure & Clean Directives**: Guarantees that refined visual prompts retain complete broadcast directions (`AUDIO`, `VISUAL SETTING`, `ON-SCREEN TEXT`, `CAMERA`, `USER NOTES APPLIED`, `NEGATIVE CONSTRAINTS`) without internal meta-prompt bleed (e.g. `FINAL PRIORITY:` instructions).
+    8. **Legible On-Screen Text Standards**: Enforces that visual text highlights and numerals remain in clear English to avoid diffusion artifact distortion, while spoken narration stays localized in regional languages.
 * **Output**: Computes a 0–100 compliance score, logs specific remediation issues, and outputs a refined storyboard ready for production with rich visual prompts.
 
 ---
@@ -150,11 +153,28 @@ Lumen executes an autonomous **5-stage sequential transformation pipeline** that
 
 ## 🛡 AI Critic & Quality Assurance
 
-Public outreach videos require strict governance before publication. The **Lumen Critic** evaluates every generated scene against 5 deterministic rubrics:
+Public outreach videos require strict governance before publication. The **Lumen Critic** evaluates every generated scene against **8 deterministic quality criteria** and enforces a strict **$\ge 90$ compliance pass threshold**:
 
 <p align="center">
   <img src="./docs/assets/critic.svg" alt="AI Critic Engine Workflow" width="100%" />
 </p>
+
+### The 8-Point Audit Rubric
+
+| # | Criterion | Focus Area | Requirement for Approval |
+|---|---|---|---|
+| **1** | **Regional Visual Grounding** | Cultural & Geographic Authenticity | Scenic visual directions must feature authentic regional architecture, clothing, and landscape cues (e.g. terracotta temples, tram lines for West Bengal). |
+| **2** | **Lip-Sync Elimination** | Audio-Visual Decoupling | Strictly enforces documentary B-roll visuals so synthesized voiceovers never fight with human lip-sync artifacts. |
+| **3** | **Audio-Visual Pacing** | Timing Padding | Validates that narration fits within scene duration with $\ge 1.0\text{s}$ lead-in and $\ge 1.5\text{s}$ trail buffer for smooth audio ducking and transitions. |
+| **4** | **Policy Fact Check** | Truth & Authenticity | Cross-checks scholarship figures, income ceilings, eligibility criteria, and portal URLs against the ingested source policy. |
+| **5** | **Public Service Tone** | Citizen Engagement | Verifies inspiring, dignified, citizen-first framing aligned with the chosen **Voice Persona** (Broadcaster, Mentor, or Youth). |
+| **6** | **Scene Count Retention** | Structural Integrity | Guarantees that the storyboard retains all requested $N$ scenes (4 to 8) without unprompted truncation or merging. |
+| **7** | **Multi-Section Prompt Structure** | Diffusion Directives | Ensures prompts contain complete structured blocks (`AUDIO`, `VISUAL SETTING`, `ON-SCREEN TEXT`, `CAMERA`, `USER NOTES`) with zero internal meta-prompt leak. |
+| **8** | **English On-Screen Text & Numerals** | Diffusion Legibility | Mandates that lower-third text overlays and monetary figures are rendered in clear Latin/English characters to prevent diffusion distortion, while spoken audio stays in the regional tongue. |
+
+### Deterministic Pass/Fail Gating
+* **Score $\ge 90$**: The storyboard is automatically locked and marked **Production Ready**, enabling batch dispatch to the video synthesis engine.
+* **Score $< 90$**: The audit produces actionable `CriticIssues` with precise remediation suggestions, allowing users to trigger a 1-click automated storyboard regeneration.
 
 ---
 
@@ -224,10 +244,8 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 
 | Provider | Model Name | Format | Description |
 |---|---|---|---|
-| **Google Gemini** | `gemini-omni-1.1-flash` | Cloud Video | Native multimodal video generation |
+| **Google Gemini** | `gemini-omni-1.1-flash` *(Default)* | Cloud Video | Native multimodal video generation with direct reference image conditioning |
 | **Offline Demo** | `FFmpeg Procedural` | Local | Generates dynamic 720p clips without API keys |
-| **Replicate** | `minimax/video-01` | Cloud Video | High-fidelity cinematic photorealism |
-| **Fal.ai** | `fal-ai/kling-video/v1` | Cloud Video | Long-horizon temporally consistent video |
 
 ---
 
@@ -290,6 +308,7 @@ All sensitive API keys provided by users (Google AI Studio, OpenAI, Replicate, F
 | `/api/projects` | `GET` / `POST` | Lists all projects or creates a new video project |
 | `/api/projects/:id` | `GET` / `PATCH` | Retrieves project details or edits project settings |
 | `/api/projects/:id/scenes/:sceneId` | `PATCH` | Updates scene title or visual prompt |
+| `/api/projects/:id/scenes/:sceneId/references` | `POST` / `DELETE` | Binds or removes reference conditioning photos for a scene |
 | `/api/projects/:id/clips` | `POST` | Triggers render task for one or all scenes |
 | `/api/projects/:id/merge` | `POST` | Compiles timeline sequence into a single MP4 |
 | `/api/assets/:id` | `GET` | Streams files supporting `Range: bytes` seek headers |
@@ -389,5 +408,5 @@ pnpm db:studio
 ---
 
 <p align="center">
-  <sub>Built with ❤️ by the COE Education Team</sub>
+  <sub>Built with ❤️ by the COE Education Team.</sub>
 </p>
