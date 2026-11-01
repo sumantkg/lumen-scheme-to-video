@@ -92,16 +92,20 @@ function findInteractionVideo(response: unknown): { buffer?: Buffer; url?: strin
     return { buffer: Buffer.from(outputVideo.data, "base64") };
   }
 
-  // 2. Steps array
+  // 2. Steps array: only extract from model output steps, never from user_input
   if (Array.isArray(root.steps)) {
     for (const step of root.steps) {
       if (!step || typeof step !== "object") continue;
-      const contentList = (step as { content?: unknown[] }).content;
+      const stepRecord = step as { type?: string; content?: unknown[] };
+      // Skip user input steps (which contain uploaded reference images)
+      if (stepRecord.type === "user_input") continue;
+
+      const contentList = stepRecord.content;
       if (Array.isArray(contentList)) {
         for (const item of contentList) {
           if (!item || typeof item !== "object") continue;
           const content = item as { type?: string; data?: string; url?: string; uri?: string };
-          if (content.type === "video" || content.data) {
+          if (content.type === "video") {
             if (content.data && typeof content.data === "string") {
               return { buffer: Buffer.from(content.data, "base64") };
             }
