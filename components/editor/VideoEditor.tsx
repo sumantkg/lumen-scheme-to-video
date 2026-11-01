@@ -761,23 +761,41 @@ export default function VideoEditor({
   const [dirty, setDirty] = useState(false);
   const docKey = useMemo(() => JSON.stringify(doc), [doc]);
 
+  // Keep presentRef strictly synchronized with doc state at all times
   useEffect(() => {
+    presentRef.current = doc;
+  }, [doc]);
+
+  // Handle dynamic changes to targetSceneId or mode if navigated after mount
+  const prevParamsRef = useRef({ targetSceneId, mode });
+  useEffect(() => {
+    if (
+      prevParamsRef.current.targetSceneId === targetSceneId &&
+      prevParamsRef.current.mode === mode
+    ) {
+      return;
+    }
+    prevParamsRef.current = { targetSceneId, mode };
+
     if (targetSceneId) {
       const sceneMap = new Map(initial.scenes.map((s) => [s.id, s]));
       const target = sceneMap.get(targetSceneId);
       if (target && target.hasClip) {
         const item: TimelineItem = {
-          instanceId: `${target.id}-solo-${Date.now()}`,
+          instanceId: `${target.id}-solo-0`,
           scene: target,
           trimStartSec: 0,
           trimEndSec: sceneSourceDuration(target),
           transition: "none",
           transitionDurationSec: 0.75,
         };
-        setDoc((current) => ({
-          ...current,
+        const nextDoc: EditorDoc = {
           sequence: [item],
-        }));
+          bgm: "none",
+          bgmVolume: 0.2,
+        };
+        presentRef.current = nextDoc;
+        setDoc(nextDoc);
         setSelection({ kind: "clip", id: item.instanceId });
         setCurrentTime(0);
       }
@@ -786,17 +804,20 @@ export default function VideoEditor({
         (scene) => scene.hasClip && !scene.hiddenInEditor
       );
       const items: TimelineItem[] = scenes.map((scene, index) => ({
-        instanceId: `${scene.id}-base-${index}-${Date.now()}`,
+        instanceId: `${scene.id}-base-${index}`,
         scene,
         trimStartSec: 0,
         trimEndSec: sceneSourceDuration(scene),
         transition: "none",
         transitionDurationSec: 0.75,
       }));
-      setDoc((current) => ({
-        ...current,
+      const nextDoc: EditorDoc = {
         sequence: items,
-      }));
+        bgm: "none",
+        bgmVolume: 0.2,
+      };
+      presentRef.current = nextDoc;
+      setDoc(nextDoc);
       setSelection(items[0] ? { kind: "clip", id: items[0].instanceId } : null);
       setCurrentTime(0);
     }
@@ -1427,9 +1448,13 @@ export default function VideoEditor({
       if (event.button !== 0) return;
       event.preventDefault();
       event.stopPropagation();
-      const item = presentRef.current.sequence.find(
-        (entry) => entry.instanceId === id
-      );
+      const currentSequence =
+        presentRef.current?.sequence && presentRef.current.sequence.length > 0
+          ? presentRef.current.sequence
+          : doc.sequence;
+      const item =
+        currentSequence.find((entry) => entry.instanceId === id) ??
+        doc.sequence.find((entry) => entry.instanceId === id);
       if (!item) return;
 
       const handleElement = event.currentTarget;
