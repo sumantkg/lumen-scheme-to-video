@@ -56,7 +56,7 @@ Lumen ingests these policy PDFs, parses the underlying rules, and autonomously p
 - **Dual-LLM Critic Architecture**: Run an independent model or provider (e.g. OpenAI GPT-4o or a distinct Gemini model) for the AI Critic agent to perform objective, unbiased compliance audits on storyboards.
 - **Visual Prompt Editing & Reference Photos**: Fine-tune individual scene prompts right from the storyboard card, attach visual reference photos per scene or project-wide, and re-render only the affected clips.
 - **Reference-Conditioned Video Synthesis**: Powered by **Google Gemini Omni 1.1 Flash** for state-of-the-art AI video generation with direct reference image conditioning, alongside a **100% offline FFmpeg procedural demo generator** that requires zero cloud credits.
-- **Non-Linear Video Editor (NLE)**: Arrange clips on an interactive multi-track timeline with sub-second trimming, 20+ cinematic transition filters, BGM audio ducking, and one-click master MP4 compilation.
+- **Non-Linear Video Editor (NLE)**: Arrange clips on an interactive multi-track timeline with precision sub-second trim handles, dedicated **Trim In** (`[`) and **Trim Out** (`]`) playhead buttons, 20+ cinematic transition filters, BGM audio ducking, and one-click master MP4 compilation.
 - **Hardware-Isolated Background Queue**: Dedicated worker architecture ensures that heavy AI generation, polling, and FFmpeg encoding never block web server responsiveness.
 - **Enterprise-Grade Key Custody**: User-provided API keys are encrypted at rest with **AES-256-GCM** using unique per-secret nonces and authentication tags.
 
@@ -142,7 +142,7 @@ Lumen executes an autonomous **5-stage sequential transformation pipeline** that
 #### 🎬 Stage 5: NLE Timeline Assembly & Final Master Merge (`merge`)
 * **Input**: Edited timeline sequence document (`editor.json`) + selected background music (BGM) + transition settings.
 * **Processing**:
-  * Non-destructive assembly: allows users to reorder scenes, trim sub-clips, add transitions (fade, dissolve, wipe, zoom), and set BGM volume.
+  * Non-destructive assembly: allows users to reorder scenes, trim sub-clips (via draggable cyan edge handles or **Trim In** `[` / **Trim Out** `]` toolbar buttons at playhead), add transitions (fade, dissolve, wipe, zoom), and set BGM volume.
   * FFmpeg constructs complex filtergraphs (`xfade` for video transitions, `amix` with audio ducking for narration and background tracks).
   * Encodes to H.264/AAC with faststart flags for instant web playback.
 * **Output**: Broadcast-ready master video saved to `storage/projects/<projectId>/final.mp4`.

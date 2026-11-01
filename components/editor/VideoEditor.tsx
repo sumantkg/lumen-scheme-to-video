@@ -529,6 +529,18 @@ const IconScissors = ({ size = 16 }: IconProps) => (
   </Svg>
 );
 
+const IconTrimStart = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M4 4v16M8 8l4 4-4 4M20 12h-8" />
+  </Svg>
+);
+
+const IconTrimEnd = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M20 4v16M16 8l-4 4 4 4M4 12h8" />
+  </Svg>
+);
+
 const IconTrash = ({ size = 16 }: IconProps) => (
   <Svg size={size}>
     <path d="M4 7h16M10 11v6M14 11v6" />
@@ -1363,6 +1375,55 @@ export default function VideoEditor({
     nextInstanceId,
   ]);
 
+  const trimStartToPlayhead = useCallback(() => {
+    const index = clipAtTime(currentTime);
+    if (index === null) {
+      setNotice({ tone: "info", text: "Move the playhead over a clip to trim its start." });
+      return;
+    }
+    const item = doc.sequence[index];
+    const timing = geometry[index];
+    if (!item || !timing) return;
+    const sourceTime = item.trimStartSec + (currentTime - timing.start);
+    if (sourceTime >= item.trimEndSec - MIN_CLIP_SECONDS) {
+      setNotice({ tone: "info", text: "Cannot trim start past the minimum duration of the clip." });
+      return;
+    }
+    const newStart = Math.max(0, roundTenth(sourceTime));
+    commit((current) => ({
+      ...current,
+      sequence: current.sequence.map((entry) =>
+        entry.instanceId === item.instanceId ? { ...entry, trimStartSec: newStart } : entry
+      ),
+    }));
+    setNotice({ tone: "info", text: `Trimmed in-point of “${item.scene.title}” to ${formatSeconds(newStart)}.` });
+  }, [clipAtTime, commit, currentTime, doc.sequence, geometry]);
+
+  const trimEndToPlayhead = useCallback(() => {
+    const index = clipAtTime(currentTime);
+    if (index === null) {
+      setNotice({ tone: "info", text: "Move the playhead over a clip to trim its end." });
+      return;
+    }
+    const item = doc.sequence[index];
+    const timing = geometry[index];
+    if (!item || !timing) return;
+    const sourceTime = item.trimStartSec + (currentTime - timing.start);
+    if (sourceTime <= item.trimStartSec + MIN_CLIP_SECONDS) {
+      setNotice({ tone: "info", text: "Cannot trim end before the minimum duration of the clip." });
+      return;
+    }
+    const sourceMax = sourceDuration(item);
+    const newEnd = Math.min(sourceMax, roundTenth(sourceTime));
+    commit((current) => ({
+      ...current,
+      sequence: current.sequence.map((entry) =>
+        entry.instanceId === item.instanceId ? { ...entry, trimEndSec: newEnd } : entry
+      ),
+    }));
+    setNotice({ tone: "info", text: `Trimmed out-point of “${item.scene.title}” to ${formatSeconds(newEnd)}.` });
+  }, [clipAtTime, commit, currentTime, doc.sequence, geometry]);
+
   const beginTrim = useCallback(
     (
       event: ReactPointerEvent<HTMLElement>,
@@ -1376,6 +1437,14 @@ export default function VideoEditor({
         (entry) => entry.instanceId === id
       );
       if (!item) return;
+
+      const handleElement = event.currentTarget;
+      const pointerId = event.pointerId;
+      try {
+        handleElement.setPointerCapture(pointerId);
+      } catch {
+        // Fallback if pointer capture unsupported
+      }
 
       const source = sourceDuration(item);
       trimSessionRef.current = {
@@ -1431,16 +1500,21 @@ export default function VideoEditor({
       };
 
       const finish = () => {
+        try {
+          if (handleElement && handleElement.hasPointerCapture(pointerId)) {
+            handleElement.releasePointerCapture(pointerId);
+          }
+        } catch {
+          // ignore
+        }
         trimSessionRef.current = null;
         setTrimDrag(null);
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", finish);
-        window.removeEventListener("pointercancel", finish);
       };
 
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", finish);
-      window.addEventListener("pointercancel", finish);
     },
     [pps, snapshot, updateLive]
   );
@@ -2000,6 +2074,12 @@ export default function VideoEditor({
       } else if (key === "s") {
         event.preventDefault();
         splitAtPlayhead();
+      } else if (key === "[") {
+        event.preventDefault();
+        trimStartToPlayhead();
+      } else if (key === "]") {
+        event.preventDefault();
+        trimEndToPlayhead();
       } else if (key === "m") {
         event.preventDefault();
         setMuted((value) => !value);
@@ -2659,6 +2739,26 @@ export default function VideoEditor({
             <button
               type="button"
               className="le-tl-btn"
+              onClick={trimStartToPlayhead}
+              disabled={activeClip === null}
+              title="Trim in-point to playhead ([)"
+            >
+              <IconTrimStart size={14} />
+              Trim In
+            </button>
+            <button
+              type="button"
+              className="le-tl-btn"
+              onClick={trimEndToPlayhead}
+              disabled={activeClip === null}
+              title="Trim out-point to playhead (])"
+            >
+              <IconTrimEnd size={14} />
+              Trim Out
+            </button>
+            <button
+              type="button"
+              className="le-tl-btn"
               onClick={() => {
                 if (selection?.kind === "clip") removeClip(selection.id);
                 else if (selection?.kind === "transition") applyTransition("none");
@@ -2771,9 +2871,10 @@ export default function VideoEditor({
                         event.stopPropagation();
                         seekTo(timing.start);
                       }}
-                      draggable
+                      draggable={trimDrag === null}
                       onDragStart={(event) => {
                         if (
+                          trimDrag !== null ||
                           (event.target as HTMLElement).closest(
                             ".le-clip-handle"
                           )
@@ -2817,10 +2918,12 @@ export default function VideoEditor({
                       <span
                         className="le-clip-handle is-left"
                         role="separator"
+                        draggable={false}
                         aria-label={`Trim in point for ${item.scene.title}`}
                         title={`Drag to trim in · ${formatSeconds(
                           item.trimStartSec
                         )}`}
+                        onMouseDown={(event) => event.stopPropagation()}
                         onPointerDown={(event) =>
                           beginTrim(event, item.instanceId, "start")
                         }
@@ -2828,10 +2931,12 @@ export default function VideoEditor({
                       <span
                         className="le-clip-handle is-right"
                         role="separator"
+                        draggable={false}
                         aria-label={`Trim out point for ${item.scene.title}`}
                         title={`Drag to trim out · ${formatSeconds(
                           item.trimEndSec
                         )}`}
+                        onMouseDown={(event) => event.stopPropagation()}
                         onPointerDown={(event) =>
                           beginTrim(event, item.instanceId, "end")
                         }

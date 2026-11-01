@@ -7034,16 +7034,17 @@ a.dash-credits:hover {
 
 .le-clip-handle {
   position: absolute;
-  z-index: 6;
+  z-index: 10;
   top: 0;
   bottom: 0;
-  width: 13px;
+  width: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   cursor: ew-resize;
   touch-action: none;
+  user-select: none;
   transition: opacity 0.14s, background 0.14s;
 }
 
@@ -7059,17 +7060,17 @@ a.dash-credits:hover {
 
 .le-clip-handle::before {
   content: "";
-  width: 3px;
-  height: 18px;
+  width: 4px;
+  height: 22px;
   border-radius: 2px;
   background: var(--le-cyan);
   box-shadow:
     0 0 0 1px rgba(4, 4, 9, 0.55),
-    0 0 9px rgba(34, 211, 238, 0.45);
+    0 0 10px rgba(34, 211, 238, 0.65);
 }
 
 .le-clip-handle:hover {
-  background: rgba(34, 211, 238, 0.14);
+  background: rgba(34, 211, 238, 0.22);
 }
 
 .le-clip:hover .le-clip-handle,
