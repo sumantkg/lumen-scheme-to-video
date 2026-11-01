@@ -236,17 +236,35 @@ export class GeminiProvider implements VideoProvider {
     cleanup: () => Promise<void>,
     onProgress: ProgressCallback
   ): Promise<ProviderRenderOutput> {
+    let requestInput: unknown = input.prompt;
+
+    if (input.references && input.references.length > 0) {
+      const parts: Array<Record<string, unknown>> = [
+        { type: "text", text: input.prompt },
+      ];
+      for (const refPath of input.references.slice(0, 2)) {
+        try {
+          const ref = await readReferenceInline(refPath);
+          parts.push({
+            type: "image",
+            data: ref.bytesBase64Encoded,
+            mime_type: ref.mimeType || "image/jpeg",
+          });
+        } catch (e) {
+          console.warn("[gemini-omni] Failed to read reference image:", e);
+        }
+      }
+      if (parts.length > 1) {
+        requestInput = parts;
+      }
+    }
+
     const body: Record<string, unknown> = {
       model: this.config.model,
-      input: input.prompt,
+      input: requestInput,
       background: true,
       ...this.config.parameters,
     };
-
-    if (input.references?.[0]) {
-      const ref = await readReferenceInline(input.references[0]);
-      body.reference_image = ref.bytesBase64Encoded;
-    }
 
     let response: unknown;
     try {
